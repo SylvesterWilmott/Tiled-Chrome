@@ -1,0 +1,35 @@
+{
+  "EXT_NAME": {
+    "message": "Tiled - Arrange windows like a pro"
+  },
+  "EXT_NAME_SHORT": {
+    "message": "Tiled"
+  },
+  "EXT_DESCRIPTION": {
+    "message": "Arrange windows like a pro, effortlessly organize your workspace"
+  },
+  "PREFERENCES": {
+    "message": "Preferences"
+  },
+  "PREF_GRID_SIZE": {
+    "message": "Grid Size"
+  },
+  "PREF_GRID_SIZE_6": {
+    "message": "6x6"
+  },
+  "PREF_GRID_SIZE_8": {
+    "message": "8x8"
+  },
+  "PREF_GRID_SIZE_9": {
+    "message": "9x9"
+  },
+  "PREF_PADDING": {
+    "message": "Window Padding"
+  },
+  "BUTTON_UNDO": {
+    "message": "Undo"
+  },
+  "BUTTON_DONE": {
+    "message": "Apply"
+  }
+}

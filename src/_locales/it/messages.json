@@ -1,0 +1,35 @@
+{
+  "EXT_NAME": {
+    "message": "Tiled - Organizza le finestre come un professionista"
+  },
+  "EXT_NAME_SHORT": {
+    "message": "Tiled"
+  },
+  "EXT_DESCRIPTION": {
+    "message": "Organizza le finestre come un professionista, organizza facilmente il tuo spazio di lavoro"
+  },
+  "PREFERENCES": {
+    "message": "Preferenze"
+  },
+  "PREF_GRID_SIZE": {
+    "message": "Dimensioni griglia"
+  },
+  "PREF_GRID_SIZE_6": {
+    "message": "6x6"
+  },
+  "PREF_GRID_SIZE_8": {
+    "message": "8x8"
+  },
+  "PREF_GRID_SIZE_9": {
+    "message": "9x9"
+  },
+  "PREF_PADDING": {
+    "message": "Spaziatura finestre"
+  },
+  "BUTTON_UNDO": {
+    "message": "Annulla"
+  },
+  "BUTTON_DONE": {
+    "message": "Applica"
+  }
+}

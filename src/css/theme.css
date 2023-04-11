@@ -1,0 +1,54 @@
+:root {
+  color-scheme: light;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", Arial, sans-serif;
+  --primary: #00687B;
+  --primary-variant: #009EBA; /* Primary 60 */
+  --on-primary: #ffffff;
+  --primary-container: #AEECFF;
+  --on-primary-container: #001F26;
+  --secondary: #4B6269;
+  --on-secondary: #ffffff;
+  --secondary-container: #CEE7EF;
+  --on-secondary-container: #061F25;
+  --tertiary: #575C7E;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #DEE0FF;
+  --on-tertiary-container: #141937;
+  --surface: #F8F9FB;
+  --on-surface: #191C1D;
+  --on-surface-variant: #3F484B;
+  --neutral-primary: #0B0F10; /* Neutral 4 */
+  --neutral-secondary: #757779; /* Neutral 50 */
+  --neutral-tertiary: #C5C7C8; /* Neutral 80 */
+  --neutral-quaternary: #ECEEEF; /* Neutral 94 */
+  --background: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --primary: #56D6F5;
+    --primary-variant: #56D6F5; /* Primary 80 */
+    --on-primary: #003641;
+    --primary-container: #004E5D;
+    --on-primary-container: #AEECFF;
+    --secondary: #B2CBD3;
+    --on-secondary: #1D343A;
+    --secondary-container: #344A51;
+    --on-secondary-container: #CEE7EF;
+    --tertiary: #BFC4EB;
+    --on-tertiary: #292E4D;
+    --tertiary-container: #3F4565;
+    --on-tertiary-container: #DEE0FF;
+    --surface: #363A3B; /* Surface bright */
+    --on-surface: #C5C7C8;
+    --on-surface-variant: #BFC8CB;
+    --neutral-primary: #ECEEEF; /* Neutral 94 */
+    --neutral-secondary: #A9ABAD; /* Neutral 70 */
+    --neutral-tertiary: #5C5F60; /* Neutral 40 */
+    --neutral-quaternary: #444748; /* Neutral 30 */
+    --background: #292a2d;
+  }
+}

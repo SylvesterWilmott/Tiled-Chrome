@@ -1,0 +1,17 @@
+{
+  "name": "tiled",
+  "productName": "Tiled",
+  "version": "1.0.0",
+  "description": "Arrange windows like a pro, effortlessly organize your workspace.",
+  "author": "Sylvester Wilmott",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-imagemin": "^7.1.0",
+    "gulp-json-editor": "^2.5.6",
+    "gulp-zip": "^5.1.0"
+  },
+  "scripts": {
+    "build": "gulp build"
+  }
+}
