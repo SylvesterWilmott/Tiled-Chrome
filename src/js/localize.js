@@ -1,9 +1,11 @@
-"use strict";
+'use strict'
 
-export function localize() {
-  let strings = document.querySelectorAll("[data-localize]");
+/* global chrome */
 
-  for (let s of strings) {
-    s.innerText = chrome.i18n.getMessage(s.dataset.localize);
+export function localize () {
+  const strings = document.querySelectorAll('[data-localize]')
+
+  for (const s of strings) {
+    s.innerText = chrome.i18n.getMessage(s.dataset.localize)
   }
 }

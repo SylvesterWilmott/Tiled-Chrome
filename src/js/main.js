@@ -3,7 +3,7 @@
 import * as windows from './windows.js'
 import * as message from './message.js'
 import * as storage from './storage.js'
-import * as i18n from "./localize.js";
+import * as i18n from './localize.js'
 
 document.addEventListener('DOMContentLoaded', init)
 
@@ -15,7 +15,7 @@ async function init () {
     console.error('An error occurred:', error)
   }
 
-  i18n.localize();
+  i18n.localize()
 }
 
 async function buildGrid () {
