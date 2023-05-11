@@ -1,5 +1,8 @@
 # Tiled
 
+![Chrome Web Store](https://img.shields.io/chrome-web-store/v/epebbpgbdaoolneajfaccpgckebbbjfo)
+![Chrome Web Store](https://img.shields.io/chrome-web-store/users/epebbpgbdaoolneajfaccpgckebbbjfo)
+
 Tiled is a Chrome extension that lets you arrange your windows using a grid-based interface.
 
 ## Installation
