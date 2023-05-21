@@ -74,24 +74,21 @@ async function setupContextMenu () {
 async function onMenuClick (info) {
   const menuId = info.menuItemId
 
-  let userPreferences
-
-  try {
-    userPreferences = await storage.load('userPreferences', { grid_size: '6', win_padding: true })
-  } catch (error) {
-    console.error('An error occurred:', error)
-    userPreferences = { grid_size: '6', win_padding: true }
-  }
+  const userPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
   switch (menuId) {
     case '6':
     case '8':
     case '9':
-      userPreferences.grid_size = menuId
+      userPreferences.grid_size.status = menuId
       clearGhost()
       break
     case 'win_padding':
-      userPreferences.win_padding = info.checked
+      userPreferences.win_padding.status = info.checked
       break
   }
 
@@ -103,25 +100,29 @@ async function onMenuClick (info) {
 }
 
 async function restorePreferences () {
-  let userPreferences
+  const userPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  try {
-    userPreferences = await storage.load('userPreferences', { grid_size: '6', win_padding: true })
-  } catch (error) {
-    console.error('An error occurred:', error)
-    userPreferences = { grid_size: '6', win_padding: true }
-  }
+  for (const preferenceName in userPreferences) {
+    const preferenceObj = userPreferences[preferenceName]
 
-  for (const preference in userPreferences) {
-    if (typeof userPreferences[preference] === 'boolean') {
-      menu.update(preference, userPreferences[preference])
-    } else {
-      menu.update(userPreferences[preference], true)
+    try {
+      if (preferenceObj.type === 'radio') {
+        await menu.update(preferenceObj.status, true)
+      } else if (preferenceObj.type === 'checkbox') {
+        await menu.update(preferenceName, preferenceObj.status)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
     }
   }
 }
 
 function onMessageReceived (message, sender, sendResponse) {
+  console.log(message)
   handleNewWindowDimensions(
     message.rectangles,
     message.gridSize,
@@ -146,55 +147,48 @@ async function handleNewWindowDimensions (
   gridSize,
   currentWindowId
 ) {
-  let existingWindows
+  const existingWindows = await windows.getWindows()
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  try {
-    existingWindows = await windows.getWindows()
-  } catch (error) {
-    console.error('An error occurred:', error)
+  let currentWindow
+  let indexOfCurrent
+
+  if (currentWindowId) {
+    currentWindow = existingWindows.find((window) => {
+      return window.id === currentWindowId
+    })
+
+    indexOfCurrent = existingWindows.findIndex((window) => {
+      return window.id === currentWindowId
+    })
   }
 
-  const currentWindow = existingWindows.find((window) => {
-    return window.id === currentWindowId
-  })
-
-  const indexOfCurrent = existingWindows.findIndex((window) => {
-    return window.id === currentWindowId
-  })
-
-  existingWindows.unshift(existingWindows.splice(indexOfCurrent, 1)[0])
-
-  let connectedDisplays
-
-  try {
-    connectedDisplays = await display.getDisplayInfo()
-  } catch (error) {
-    console.error('An error occurred:', error)
-    return
+  if (indexOfCurrent !== undefined && indexOfCurrent !== -1) {
+    existingWindows.unshift(existingWindows.splice(indexOfCurrent, 1)[0])
   }
 
-  let currentDisplay
+  const connectedDisplays = await display.getDisplayInfo()
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  try {
-    currentDisplay = await getDisplayContainingCurrentWindow(
-      connectedDisplays,
-      currentWindow
-    )
-  } catch (error) {
-    console.error('An error occurred:', error)
-    return
-  }
+  const currentDisplay = await getDisplayContainingCurrentWindow(
+    connectedDisplays,
+    currentWindow
+  )
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  let userPreferences = {}
+  const userPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  try {
-    userPreferences = await storage.load('userPreferences', { grid_size: '6', win_padding: true })
-  } catch (error) {
-    console.error('An error occurred:', error)
-    userPreferences = { grid_size: '6', win_padding: true }
-  }
-
-  const padding = userPreferences.win_padding ? 10 : 0
+  const padding = userPreferences.win_padding.status ? 10 : 0
   const numberOfGridcells = gridSize
   const percentagePerGridCell = 100 / numberOfGridcells
   const workArea = currentDisplay.workArea
