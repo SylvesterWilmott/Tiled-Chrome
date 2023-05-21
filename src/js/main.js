@@ -20,13 +20,15 @@ async function init () {
 
 async function buildGrid () {
   const userPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
+    .load('userPreferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
 
   const gridSize = parseInt(userPreferences.grid_size.status)
   const table = document.getElementById('grid')
+
+  console.log(gridSize)
 
   for (let i = 0; i < gridSize; i++) {
     const row = document.createElement('tr')

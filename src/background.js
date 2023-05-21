@@ -75,7 +75,7 @@ async function onMenuClick (info) {
   const menuId = info.menuItemId
 
   const userPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
+    .load('userPreferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
@@ -101,7 +101,7 @@ async function onMenuClick (info) {
 
 async function restorePreferences () {
   const userPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
+    .load('userPreferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
@@ -182,7 +182,7 @@ async function handleNewWindowDimensions (
     })
 
   const userPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
+    .load('userPreferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
