@@ -2,6 +2,11 @@
 
 /* global chrome */
 
+export const preferenceDefaults = {
+  grid_size: { status: '6', type: 'radio' },
+  win_padding: { status: true, type: 'checkbox' }
+}
+
 export function saveSession (key, value) {
   return new Promise((resolve, reject) => {
     chrome.storage.session.set(

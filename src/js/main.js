@@ -19,16 +19,13 @@ async function init () {
 }
 
 async function buildGrid () {
-  let userPreferences = {}
+  const userPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
-  try {
-    userPreferences = await storage.load('userPreferences', { grid_size: '6', win_padding: true })
-  } catch (error) {
-    console.error('An error occurred:', error)
-    userPreferences = { grid_size: '6', win_padding: true }
-  }
-
-  const gridSize = parseInt(userPreferences.grid_size)
+  const gridSize = parseInt(userPreferences.grid_size.status)
   const table = document.getElementById('grid')
 
   for (let i = 0; i < gridSize; i++) {
@@ -173,14 +170,10 @@ function setupGrid () {
 
     const gridSize = table.rows[0].cells.length
 
-    let currentWindow
-
-    try {
-      currentWindow = await windows.getCurrentWindow()
-    } catch (error) {
-      console.error('An error occurred:', error)
-      return
-    }
+    const currentWindow = await windows.getCurrentWindow()
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
 
     try {
       await message.send({
@@ -194,6 +187,10 @@ function setupGrid () {
   }
 
   function onUndoButtonPressed () {
+    undo()
+  }
+
+  function undo() {
     if (rectanglesDrawn.length) {
       removePreviousSelection()
     }
@@ -256,7 +253,7 @@ function setupGrid () {
         removeAllSelections()
       } else if (rectanglesDrawn.length) {
         e.preventDefault()
-        removePreviousSelection()
+        undo()
       } else {
         window.close()
       }
@@ -275,7 +272,6 @@ function setupGrid () {
         selection.x,
         selection.x + selection.width
       )) {
-        console.log(cell)
         cell.classList.remove('ghost_' + number) // Remove the "ghost" class from each cell
       }
     }
