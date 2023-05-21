@@ -122,7 +122,6 @@ async function restorePreferences () {
 }
 
 function onMessageReceived (message, sender, sendResponse) {
-  console.log(message)
   handleNewWindowDimensions(
     message.rectangles,
     message.gridSize,
