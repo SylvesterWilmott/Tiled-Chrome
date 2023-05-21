@@ -272,7 +272,6 @@ function setupGrid () {
         selection.x,
         selection.x + selection.width
       )) {
-        console.log(cell)
         cell.classList.remove('ghost_' + number) // Remove the "ghost" class from each cell
       }
     }
