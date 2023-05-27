@@ -3,52 +3,36 @@
   --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", Arial, sans-serif;
-  --primary: #0058CB;
-  --primary-variant: #3472E5; /* Primary 50 */
-  --on-primary: #ffffff;
-  --primary-container: #D9E2FF;
-  --on-primary-container: #001945;
-  --secondary: #575E71;
-  --on-secondary: #ffffff;
-  --secondary-container: #DCE2F9;
-  --on-secondary-container: #141B2C;
-  --tertiary: #725572;
-  --on-tertiary: #ffffff;
-  --tertiary-container: #FDD7FA;
-  --on-tertiary-container: #2A132C;
-  --surface: #FBF8FD;
-  --on-surface: #1B1B1F;
-  --on-surface-variant: #44464F;
-  --neutral-primary: #0D0E11; /* Neutral 4 */
-  --neutral-secondary: #77777A; /* Neutral 50 */
-  --neutral-tertiary: #C7C6CA; /* Neutral 80 */
-  --neutral-quaternary: #EFEDF1; /* Neutral 94 */
+  --primary: #0550E1;
+  --neutral-primary: rgba(0, 0, 0, 0.87);
+  --neutral-secondary: rgba(0, 0, 0, 0.61);
+  --neutral-tertiary: rgba(0, 0, 0, 0.09);
+  --neutral-quaternary: rgba(0, 0, 0, 0.05);
+  --separator: rgba(0, 0, 0, 0.1);
   --background: #ffffff;
+  --background-elevated: #ffffff;
+  --on-button: #ffffff;
+  --grid-ghost: rgba(5, 80, 225, 0.15);
+  --grid-inactive: rgba(0, 0, 0, 0.08);
+  --grid-selected: rgba(0, 0, 0, 0.2);
+  --button-hover: rgba(5, 80, 225, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --primary: #B0C6FF;
-    --primary-variant: #B0C6FF; /* Primary 80 */
-    --on-primary: #002D6F;
-    --primary-container: #00429B;
-    --on-primary-container: #D9E2FF;
-    --secondary: #C0C6DC;
-    --on-secondary: #293042;
-    --secondary-container: #404659;
-    --on-secondary-container: #DCE2F9;
-    --tertiary: #E0BBDD;
-    --on-tertiary: #412742;
-    --tertiary-container: #593D5A;
-    --on-tertiary-container: #FDD7FA;
-    --surface: #39393C; /* Surface bright */
-    --on-surface: #C7C6CA;
-    --on-surface-variant: #C5C6D0;
-    --neutral-primary: #EFEDF1; /* Neutral 94 */
-    --neutral-secondary: #ACABAF; /* Neutral 70 */
-    --neutral-tertiary: #5E5E62; /* Neutral 40 */
-    --neutral-quaternary: #46464A; /* Neutral 30 */
-    --background: #292a2d;
+    --primary: #B5C4FF;
+    --neutral-primary: rgba(255, 255, 255, 0.87);
+    --neutral-secondary: rgba(255, 255, 255, 0.57);
+    --neutral-tertiary: rgba(255, 255, 255, 0.14);
+    --neutral-quaternary: rgba(255, 255, 255, 0.05);
+    --separator: rgba(255, 255, 255, 0.1);
+    --background: #202124;
+    --background-elevated: #292a2d;
+    --on-button: #202124;
+    --grid-ghost: rgba(181, 196, 255, 0.2);
+    --grid-inactive: rgba(255, 255, 255, 0.08);
+    --button-hover: rgba(181, 196, 255, 0.08);
+    --grid-selected: rgba(255, 255, 255, 0.2);
   }
 }

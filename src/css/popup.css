@@ -6,7 +6,7 @@
 }
 
 body {
-  background-color: var(--background);
+  background-color: var(--background-elevated);
   height: auto;
   width: auto;
   position: relative;
@@ -22,13 +22,13 @@ body {
 }
 
 .cell {
-  background-color: var(--neutral-quaternary);
+  background-color: var(--grid-inactive);
   border-radius: 4px;
   position: relative;
 }
 
 .cell.highlight {
-  background-color: var(--neutral-tertiary);
+  background-color: var(--grid-selected);
 }
 
 .ghost_1,
@@ -41,7 +41,10 @@ body {
 .ghost_8,
 .ghost_9,
 .ghost_10  {
-  background-color: var(--secondary-container);
+  background-image: url(../images/pattern.svg);
+  background-repeat: repeat;
+  background-size: 4px;
+  background-color: var(--grid-ghost);
 }
 
 .rect_1,
@@ -54,7 +57,7 @@ body {
 .rect_8,
 .rect_9,
 .rect_10  {
-  border: 1px solid var(--primary-variant);
+  border: 1px solid var(--primary);
   border-radius: 4px;
   position: absolute;
   pointer-events: none;
@@ -76,13 +79,13 @@ body {
   font-weight: 500;
   height: 36px;
   padding: 0 24px;
-  border-radius: 999px;
+  border-radius: 4px;
   transition: all 0.15s ease;
   user-select: none;
 }
 
 .button.primary {
-  color: var(--on-primary);
+  color: var(--background);
   background-color: var(--primary);
 }
 
@@ -96,11 +99,11 @@ body {
 
 .button.secondary {
   color: var(--primary);
-  box-shadow: inset 0px 0px 0px 0.5px var(--neutral-tertiary);
+  box-shadow: inset 0px 0px 0px 1px var(--separator);
 }
 
 .button.secondary:hover {
-  background-color: var(--surface);
+  background-color: var(--button-hover);
 }
 
 .button.secondary:active {
@@ -109,14 +112,12 @@ body {
 
 .button.primary[disabled] {
   pointer-events: none;
-  opacity: 0.5;
-  color: var(--on-surface);
+  color: var(--neutral-secondary);
   background-color: var(--neutral-quaternary);
 }
 
 .button.secondary[disabled] {
   pointer-events: none;
-  color: var(--on-surface);
+  color: var(--neutral-secondary);
   box-shadow: inset 0px 0px 0px 0.5px var(--neutral-tertiary);
-  opacity: 0.5;
 }
