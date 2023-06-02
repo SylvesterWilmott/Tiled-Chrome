@@ -192,7 +192,7 @@ function setupGrid () {
     undo()
   }
 
-  function undo() {
+  function undo () {
     if (rectanglesDrawn.length) {
       removePreviousSelection()
     }
