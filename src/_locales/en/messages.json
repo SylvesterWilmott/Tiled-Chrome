@@ -30,7 +30,7 @@
     "message": "Undo"
   },
   "BUTTON_DONE": {
-    "message": "Apply"
+    "message": "Apply Layout"
   },
   "ACCELERATOR_APPLY": {
     "message": "\u23CE"
