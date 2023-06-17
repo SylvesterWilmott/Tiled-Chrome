@@ -175,7 +175,3 @@ async function getDisplayContainingCurrentWindow (
 
   return connectedDisplays[index]
 }
-
-async function clearGhost () {
-  storage.clearSession('previousSelection')
-}
