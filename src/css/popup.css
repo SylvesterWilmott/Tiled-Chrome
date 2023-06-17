@@ -25,7 +25,8 @@ body {
 }
 
 .grid-stage {
-  box-shadow: inset 0px 0px 0px 1px var(--neutral-primary), 0px 3px 6px 0px rgba(0,0,0,0.15);
+  box-shadow: inset 0px 0px 0px 1px var(--neutral-primary),
+    0px 3px 6px 0px rgba(0, 0, 0, 0.15);
   padding: 12px;
 }
 
@@ -55,7 +56,7 @@ body {
 .rect_7,
 .rect_8,
 .rect_9,
-.rect_10  {
+.rect_10 {
   padding: 4px;
   position: absolute;
   pointer-events: none;
@@ -70,7 +71,7 @@ body {
 .rect_7 > div,
 .rect_8 > div,
 .rect_9 > div,
-.rect_10  {
+.rect_10 {
   border: 1px solid var(--primary);
   background-color: var(--rect-fill);
   border-radius: 6px;
@@ -88,7 +89,7 @@ body {
 .rect_7 > div:before,
 .rect_8 > div:before,
 .rect_9 > div:before,
-.rect_10 > div:before  {
+.rect_10 > div:before {
   content: "";
   height: 12px;
   width: 100%;
@@ -109,7 +110,7 @@ body {
 .rect_7 > div:after,
 .rect_8 > div:after,
 .rect_9 > div:after,
-.rect_10 > div:after  {
+.rect_10 > div:after {
   content: "";
   height: 4px;
   width: 4px;
@@ -147,7 +148,7 @@ body {
 }
 
 .button.primary:hover {
-  opacity: 0.90;
+  opacity: 0.9;
 }
 
 .button.primary:active {
@@ -332,7 +333,8 @@ select:hover {
   bottom: -2px;
   background-color: var(--handle);
   border-radius: 12px;
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15),
+    0px 2px 3px 0px rgba(0, 0, 0, 0.2);
 }
 
 input:checked + .track:before {
