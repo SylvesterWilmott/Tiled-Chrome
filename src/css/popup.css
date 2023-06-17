@@ -237,8 +237,15 @@ select {
   outline: none;
   font-size: 13px;
   color: var(--neutral-primary);
-  padding: 8px 20px 8px 8px;
+  background: transparent;
+  padding: 0 32px 0 8px;
+  height: 32px;
   border-radius: 4px;
+  background: var(--neutral-tertiary);
+}
+
+select:focus {
+  box-shadow: 0px 0px 0px 2px var(--track-active);
 }
 
 select:hover {
@@ -260,7 +267,7 @@ select:hover {
   -webkit-mask-image: url(../images/dropdown.svg);
   mask-image: url(../images/dropdown.svg);
   position: absolute;
-  right: 0;
+  right: 4px;
   pointer-events: none;
 }
 
