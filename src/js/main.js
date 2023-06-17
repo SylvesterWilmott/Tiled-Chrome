@@ -81,7 +81,7 @@ async function restorePreferences () {
           const optionElement = document.createElement('option')
 
           optionElement.value = option
-          optionElement.text = `${option}x${option}`
+          optionElement.text = `${option} x ${option}`
 
           preferenceElement.appendChild(optionElement)
         }
