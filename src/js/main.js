@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', init)
 async function init () {
   try {
     try {
-      await Promise.all([restorePreferences, buildGrid(), i18n.localize()])
+      await Promise.all([restorePreferences(), buildGrid(), i18n.localize()])
     } catch (error) {
       console.error('An error occurred:', error)
     }
