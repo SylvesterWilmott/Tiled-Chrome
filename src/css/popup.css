@@ -3,6 +3,12 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
+}
+
+.no-transition,
+.no-transition:before {
+  transition: none !important;
 }
 
 body {
@@ -10,41 +16,34 @@ body {
   height: auto;
   width: auto;
   position: relative;
+  padding: 0 0 4px 0;
+}
+
+.grid-container {
+  border-bottom: 1px solid var(--separator);
+  padding: 48px;
+}
+
+.grid-stage {
+  box-shadow: inset 0px 0px 0px 1px var(--neutral-primary), 0px 3px 6px 0px rgba(0,0,0,0.15);
+  padding: 12px;
 }
 
 .grid {
-  border-collapse: separate;
   user-select: none;
-  height: 220px;
-  width: 355px;
-  border-spacing: 4px;
-  padding: 12px 12px 0;
+  height: 192px;
+  width: 300px;
+  border-collapse: collapse;
 }
 
 .cell {
-  background-color: var(--grid-inactive);
-  border-radius: 4px;
+  border: 1px solid var(--cell);
   position: relative;
+  cursor: crosshair;
 }
 
 .cell.highlight {
-  background-color: var(--grid-selected);
-}
-
-.ghost_1,
-.ghost_2,
-.ghost_3,
-.ghost_4,
-.ghost_5,
-.ghost_6,
-.ghost_7,
-.ghost_8,
-.ghost_9,
-.ghost_10  {
-  background-image: url(../images/pattern.svg);
-  background-repeat: repeat;
-  background-size: 4px;
-  background-color: var(--grid-ghost);
+  background-color: var(--cell-highlighted);
 }
 
 .rect_1,
@@ -57,10 +56,68 @@ body {
 .rect_8,
 .rect_9,
 .rect_10  {
-  border: 1px solid var(--primary);
-  border-radius: 4px;
+  padding: 4px;
   position: absolute;
   pointer-events: none;
+}
+
+.rect_1 > div,
+.rect_2 > div,
+.rect_3 > div,
+.rect_4 > div,
+.rect_5 > div,
+.rect_6 > div,
+.rect_7 > div,
+.rect_8 > div,
+.rect_9 > div,
+.rect_10  {
+  border: 1px solid var(--primary);
+  background-color: var(--rect-fill);
+  border-radius: 6px;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.rect_1 > div:before,
+.rect_2 > div:before,
+.rect_3 > div:before,
+.rect_4 > div:before,
+.rect_5 > div:before,
+.rect_6 > div:before,
+.rect_7 > div:before,
+.rect_8 > div:before,
+.rect_9 > div:before,
+.rect_10 > div:before  {
+  content: "";
+  height: 12px;
+  width: 100%;
+  position: absolute;
+  border-bottom: 1px solid var(--primary);
+  background-color: var(--rect-fill);
+  top: 0;
+  left: 0;
+  border-radius: 6px 6px 0 0;
+}
+
+.rect_1 > div:after,
+.rect_2 > div:after,
+.rect_3 > div:after,
+.rect_4 > div:after,
+.rect_5 > div:after,
+.rect_6 > div:after,
+.rect_7 > div:after,
+.rect_8 > div:after,
+.rect_9 > div:after,
+.rect_10 > div:after  {
+  content: "";
+  height: 4px;
+  width: 4px;
+  position: absolute;
+  box-shadow: inset 0px 0px 0px 1px var(--primary);
+  top: 4px;
+  left: 4px;
+  border-radius: 50%;
 }
 
 .actions {
@@ -120,4 +177,207 @@ body {
   pointer-events: none;
   color: var(--neutral-secondary);
   box-shadow: inset 0px 0px 0px 0.5px var(--neutral-tertiary);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 16px 8px;
+}
+
+.group {
+  padding: 4px 0;
+  list-style: none;
+  border-bottom: 1px solid var(--separator);
+}
+
+.group:last-child {
+  border: none;
+}
+
+.item {
+  position: relative;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  width: 100%;
+  font-size: 13px;
+  padding: 0 16px;
+}
+
+.item > .left-detail {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item.separated {
+  margin-bottom: 4px;
+}
+
+.right-detail {
+  color: var(--neutral-secondary);
+}
+
+.nav-index > .left-detail,
+.nav-index > .right-detail {
+  pointer-events: none;
+}
+
+select {
+  pointer-events: all;
+  appearance: none;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: var(--neutral-primary);
+  padding: 8px 20px 8px 8px;
+  border-radius: 4px;
+}
+
+select:hover {
+  background: var(--neutral-tertiary);
+}
+
+.select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.select:after {
+  content: "";
+  background-color: var(--neutral-secondary);
+  height: 20px;
+  width: 20px;
+  -webkit-mask-image: url(../images/dropdown.svg);
+  mask-image: url(../images/dropdown.svg);
+  position: absolute;
+  right: 0;
+  pointer-events: none;
+}
+
+.label,
+.label-large {
+  color: var(--neutral-primary);
+}
+
+.label {
+  font-size: 13px;
+  margin-right: 32px;
+}
+
+.item-icon + .label {
+  margin-left: 12px;
+}
+
+.label-large {
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.accelerator {
+  color: var(--neutral-secondary);
+}
+
+.selected .accelerator {
+  color: var(--neutral-primary);
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  width: 28px;
+  height: 12px;
+}
+
+.switch input {
+  display: none;
+}
+
+.track {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: 0.4s;
+  border-radius: 16px;
+  background-color: var(--track);
+}
+
+.track:before {
+  position: absolute;
+  content: "";
+  transition: 0.4s;
+  height: 16px;
+  width: 16px;
+  left: -3px;
+  bottom: -2px;
+  background-color: var(--handle);
+  border-radius: 12px;
+  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+input:checked + .track:before {
+  background-color: var(--primary);
+  transform: translateX(11px);
+  height: 16px;
+  width: 16px;
+  left: 4px;
+  bottom: -2px;
+}
+
+input:checked + .track {
+  background-color: var(--track-active);
+}
+
+.selected {
+  background: var(--neutral-tertiary);
+}
+
+.item-icon {
+  height: 20px;
+  width: 20px;
+}
+
+.left-detail .item-icon {
+  background-color: var(--neutral-secondary);
+}
+
+.right-detail .item-icon {
+  background-color: var(--neutral-secondary);
+}
+
+.left-detail .item-icon.active {
+  background-color: var(--primary);
+}
+
+.item-icon.padding {
+  -webkit-mask-image: url(../images/padding.svg);
+  mask-image: url(../images/padding.svg);
+}
+
+.item-icon.gridSize {
+  -webkit-mask-image: url(../images/grid.svg);
+  mask-image: url(../images/grid.svg);
+}
+
+.item-icon.apply {
+  -webkit-mask-image: url(../images/apply.svg);
+  mask-image: url(../images/apply.svg);
+}
+
+.item-icon.undo {
+  -webkit-mask-image: url(../images/undo.svg);
+  mask-image: url(../images/undo.svg);
 }

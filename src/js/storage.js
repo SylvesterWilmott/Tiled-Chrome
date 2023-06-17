@@ -3,7 +3,7 @@
 /* global chrome */
 
 export const preferenceDefaults = {
-  grid_size: { status: '6', type: 'radio' },
+  grid_size: { status: '6', type: 'select', options: ['6', '8', '9'] },
   win_padding: { status: true, type: 'checkbox' }
 }
 

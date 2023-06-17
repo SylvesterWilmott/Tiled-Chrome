@@ -5,121 +5,8 @@
 import * as windows from './js/windows.js'
 import * as display from './js/display.js'
 import * as storage from './js/storage.js'
-import * as menu from './js/menu.js'
 
-chrome.runtime.onInstalled.addListener(init)
-chrome.runtime.onStartup.addListener(restorePreferences)
 chrome.runtime.onMessage.addListener(onMessageReceived)
-chrome.contextMenus.onClicked.addListener(onMenuClick)
-
-async function init () {
-  try {
-    await setupContextMenu()
-    await restorePreferences()
-  } catch (error) {
-    console.error('An error occurred:', error)
-  }
-}
-
-async function setupContextMenu () {
-  const menuItems = [
-    {
-      title: chrome.i18n.getMessage('PREFERENCES'),
-      contexts: ['action'],
-      id: 'h_1',
-      enabled: false
-    },
-    {
-      title: chrome.i18n.getMessage('PREF_GRID_SIZE'),
-      contexts: ['action'],
-      id: 'grid_size'
-    },
-    {
-      title: chrome.i18n.getMessage('PREF_GRID_SIZE_6'),
-      contexts: ['action'],
-      id: '6',
-      parentId: 'grid_size',
-      type: 'radio'
-    },
-    {
-      title: chrome.i18n.getMessage('PREF_GRID_SIZE_8'),
-      contexts: ['action'],
-      id: '8',
-      parentId: 'grid_size',
-      type: 'radio'
-    },
-    {
-      title: chrome.i18n.getMessage('PREF_GRID_SIZE_9'),
-      contexts: ['action'],
-      id: '9',
-      parentId: 'grid_size',
-      type: 'radio'
-    },
-    {
-      title: chrome.i18n.getMessage('PREF_PADDING'),
-      contexts: ['action'],
-      id: 'win_padding',
-      checked: true,
-      type: 'checkbox'
-    }
-  ]
-
-  try {
-    await menu.create(menuItems)
-  } catch (error) {
-    console.error('An error occurred:', error)
-  }
-}
-
-async function onMenuClick (info) {
-  const menuId = info.menuItemId
-
-  const userPreferences = await storage
-    .load('userPreferences', storage.preferenceDefaults)
-    .catch((error) => {
-      console.error('An error occurred:', error)
-    })
-
-  switch (menuId) {
-    case '6':
-    case '8':
-    case '9':
-      userPreferences.grid_size.status = menuId
-      clearGhost()
-      break
-    case 'win_padding':
-      userPreferences.win_padding.status = info.checked
-      break
-  }
-
-  try {
-    await storage.save('userPreferences', userPreferences)
-  } catch (error) {
-    console.error('An error occurred:', error)
-  }
-}
-
-async function restorePreferences () {
-  const userPreferences = await storage
-    .load('userPreferences', storage.preferenceDefaults)
-    .catch((error) => {
-      console.error('An error occurred:', error)
-    })
-
-  for (const preferenceName in userPreferences) {
-    const preferenceObj = userPreferences[preferenceName]
-
-    try {
-      if (preferenceObj.type === 'radio') {
-        await menu.update(preferenceObj.status, true)
-      } else if (preferenceObj.type === 'checkbox') {
-        await menu.update(preferenceName, preferenceObj.status)
-      }
-    } catch (error) {
-      console.error('An error occurred:', error)
-    }
-  }
-}
 
 function onMessageReceived (message, sender, sendResponse) {
   handleNewWindowDimensions(
@@ -181,13 +68,13 @@ async function handleNewWindowDimensions (
       console.error('An error occurred:', error)
     })
 
-  const userPreferences = await storage
-    .load('userPreferences', storage.preferenceDefaults)
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
 
-  const padding = userPreferences.win_padding.status ? 10 : 0
+  const padding = storedPreferences.win_padding.status ? 10 : 0
   const numberOfGridcells = gridSize
   const percentagePerGridCell = 100 / numberOfGridcells
   const workArea = currentDisplay.workArea
