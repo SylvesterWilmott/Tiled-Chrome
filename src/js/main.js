@@ -1,5 +1,8 @@
 'use strict'
 
+/* global chrome, Audio */
+
+import * as navigation from './navigation.js'
 import * as windows from './windows.js'
 import * as message from './message.js'
 import * as storage from './storage.js'
@@ -9,26 +12,98 @@ document.addEventListener('DOMContentLoaded', init)
 
 async function init () {
   try {
-    await buildGrid()
-    setupGrid()
+    try {
+      await Promise.all([restorePreferences(), buildGrid(), i18n.localize()])
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
   } catch (error) {
     console.error('An error occurred:', error)
   }
 
-  i18n.localize()
+  setupGrid()
+  navigation.init()
+  registerListeners()
+  ready()
 }
 
-async function buildGrid () {
-  const userPreferences = await storage
-    .load('userPreferences', storage.preferenceDefaults)
+function ready () {
+  postponeAnimationUntilReady()
+}
+
+function postponeAnimationUntilReady () {
+  const animatedElements = document.querySelectorAll('.no-transition')
+
+  for (const el of animatedElements) {
+    const pseudoBefore = window.getComputedStyle(el, ':before').content
+    const pseudoAfter = window.getComputedStyle(el, ':after').content
+    const hasBeforeContent = pseudoBefore !== 'none' && pseudoBefore !== ''
+    const hasAfterContent = pseudoAfter !== 'none' && pseudoAfter !== ''
+
+    if (hasBeforeContent || hasAfterContent) {
+      el.addEventListener(
+        'transitionend',
+        function () {
+          el.classList.remove('no-transition')
+        },
+        { once: true }
+      )
+    }
+
+    el.classList.remove('no-transition')
+  }
+}
+
+async function restorePreferences () {
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
     .catch((error) => {
       console.error('An error occurred:', error)
     })
 
-  const gridSize = parseInt(userPreferences.grid_size.status)
+  for (const preferenceName in storedPreferences) {
+    const preferenceObj = storedPreferences[preferenceName]
+
+    if (preferenceObj.type === 'checkbox') {
+      const preferenceElement = document.getElementById(preferenceName)
+
+      if (preferenceElement) {
+        preferenceElement.checked = preferenceObj.status
+      }
+    } else if (preferenceObj.type === 'select') {
+      const preferenceElement = document.getElementById(preferenceName)
+
+      console.log(preferenceElement)
+
+      if (preferenceElement) {
+        // Add options to select element
+        for (const option of preferenceObj.options) {
+          const optionElement = document.createElement('option')
+
+          optionElement.value = option
+          optionElement.text = `${option} x ${option}`
+
+          preferenceElement.appendChild(optionElement)
+        }
+
+        // Select option
+        preferenceElement.value = preferenceObj.status
+      }
+    }
+  }
+}
+
+async function buildGrid () {
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+  const gridSize = parseInt(storedPreferences.grid_size.status)
   const table = document.getElementById('grid')
 
-  console.log(gridSize)
+  table.innerHTML = ''
 
   for (let i = 0; i < gridSize; i++) {
     const row = document.createElement('tr')
@@ -42,8 +117,6 @@ async function buildGrid () {
 }
 
 function setupGrid () {
-  const doneButton = document.getElementById('done')
-  const undoButton = document.getElementById('undo')
   const table = document.getElementById('grid')
 
   const maxrextangles = 10
@@ -54,12 +127,20 @@ function setupGrid () {
   let endCell
   let isDragging = false
 
-  table.addEventListener('mousedown', onTableMousedown)
-  table.addEventListener('mousemove', onTableMousemove)
-  document.addEventListener('mouseup', onDocumentMouseup)
-  document.addEventListener('keydown', onDocumentKeydown)
-  doneButton.addEventListener('click', onDoneButtonPressed)
-  undoButton.addEventListener('click', onUndoButtonPressed)
+  const on = (target, event, handler) => {
+    if (typeof target === 'string') {
+      document.getElementById(target).addEventListener(event, handler, false)
+    } else {
+      target.addEventListener(event, handler, false)
+    }
+  }
+
+  on('grid', 'mousedown', onTableMousedown)
+  on('grid', 'mousemove', onTableMousemove)
+  on(document, 'mouseup', onDocumentMouseup)
+  on(document, 'keydown', onDocumentKeydown)
+  on('apply', 'click', onDoneButtonPressed)
+  on('undo', 'click', onUndoButtonPressed)
 
   const allCells = document.querySelectorAll('.cell')
 
@@ -125,14 +206,6 @@ function setupGrid () {
     clearGhost(selection, ghostCount)
     ghostCount--
     rectanglesDrawn.pop()
-
-    if (!rectanglesDrawn.length && !undoButton.disabled) {
-      undoButton.disabled = true
-    }
-
-    if (!rectanglesDrawn.length && !doneButton.disabled) {
-      doneButton.disabled = true
-    }
   }
 
   function transformSelectionToGhost () {
@@ -153,6 +226,7 @@ function setupGrid () {
 
   function createRectangle (boundingBox, number) {
     const rectangle = document.createElement('div')
+    const rectangleInner = document.createElement('div')
 
     rectangle.style.left = `${boundingBox.left}px`
     rectangle.style.top = `${boundingBox.top}px`
@@ -161,21 +235,21 @@ function setupGrid () {
     rectangle.style.zIndex = number
     rectangle.classList.add('rect_' + number)
 
-    document.body.appendChild(rectangle)
+    rectangle.prepend(rectangleInner)
+    document.body.prepend(rectangle)
   }
 
   async function onDoneButtonPressed () {
     if (!rectanglesDrawn.length) {
-      window.close()
+      playSound('error')
       return
     }
 
     const gridSize = table.rows[0].cells.length
 
-    const currentWindow = await windows.getCurrentWindow()
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
+    const currentWindow = await windows.getCurrentWindow().catch((error) => {
+      console.error('An error occurred:', error)
+    })
 
     try {
       await message.send({
@@ -193,9 +267,12 @@ function setupGrid () {
   }
 
   function undo () {
-    if (rectanglesDrawn.length) {
-      removePreviousSelection()
+    if (!rectanglesDrawn.length) {
+      playSound('error')
+      return
     }
+
+    removePreviousSelection()
   }
 
   async function onDocumentMouseup () {
@@ -231,14 +308,6 @@ function setupGrid () {
     isDragging = false
 
     rectanglesDrawn.push(selectionObject)
-
-    if (rectanglesDrawn.length && undoButton.disabled) {
-      undoButton.disabled = false
-    }
-
-    if (rectanglesDrawn.length && doneButton.disabled) {
-      doneButton.disabled = false
-    }
 
     transformSelectionToGhost()
     startCell = null
@@ -303,4 +372,103 @@ function setupGrid () {
 
     return { left, top, right, bottom }
   }
+}
+
+function registerListeners () {
+  const on = (target, event, handler) => {
+    if (typeof target === 'string') {
+      document.getElementById(target).addEventListener(event, handler, false)
+    } else {
+      target.addEventListener(event, handler, false)
+    }
+  }
+
+  const onAll = (target, event, handler) => {
+    const elements = document.querySelectorAll(target)
+
+    for (const el of elements) {
+      el.addEventListener(event, handler, false)
+    }
+  }
+
+  onAll('input[type="checkbox"]', 'change', onCheckBoxChanged)
+  onAll('select', 'change', onSelectChanged)
+  on(document, 'keydown', onDocumentKeydown)
+}
+
+function onDocumentKeydown (e) {
+  if (e.key === 'Enter') {
+    const navElements = document.querySelectorAll('.nav-index:not(.selected)')
+
+    if (navElements.length === 0) {
+      document.getElementById('apply').click()
+    }
+  } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
+    document.getElementById('undo').click()
+  }
+}
+
+async function onCheckBoxChanged (e) {
+  const target = e.target
+  const targetId = target.id
+
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+      target.checked = !target.checked
+    })
+
+  const preference = storedPreferences[targetId]
+
+  if (!preference) return
+
+  preference.status = target.checked
+
+  try {
+    await storage.save('preferences', storedPreferences)
+  } catch (error) {
+    console.error('An error occurred:', error)
+    target.checked = !target.checked
+  }
+}
+
+async function onSelectChanged (e) {
+  const target = e.target
+  const targetId = target.id
+
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+      target.checked = !target.checked
+    })
+
+  const preference = storedPreferences[targetId]
+
+  if (!preference) return
+
+  preference.status = target.value
+
+  console.log(storedPreferences)
+
+  try {
+    await storage.save('preferences', storedPreferences)
+  } catch (error) {
+    console.error('An error occurred:', error)
+  }
+
+  if (target.id === 'grid_size') {
+    try {
+      window.location.reload()
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  }
+}
+
+function playSound (sound) {
+  const playable = new Audio(chrome.runtime.getURL(`audio/${sound}.mp3`))
+  playable.play()
 }

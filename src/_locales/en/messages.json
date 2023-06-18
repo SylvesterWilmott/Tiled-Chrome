@@ -30,6 +30,18 @@
     "message": "Undo"
   },
   "BUTTON_DONE": {
-    "message": "Apply"
+    "message": "Apply Layout"
+  },
+  "ACCELERATOR_APPLY": {
+    "message": "\u23CE"
+  },
+  "ACCELERATOR_APPLY_MAC": {
+    "message": "\u23CE"
+  },
+  "ACCELERATOR_UNDO": {
+    "message": "Ctrl+Z"
+  },
+  "ACCELERATOR_UNDO_MAC": {
+    "message": "\u2318Z"
   }
 }

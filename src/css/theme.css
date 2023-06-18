@@ -11,11 +11,12 @@
   --separator: rgba(0, 0, 0, 0.1);
   --background: #ffffff;
   --background-elevated: #ffffff;
-  --on-button: #ffffff;
-  --grid-ghost: rgba(5, 80, 225, 0.15);
-  --grid-inactive: rgba(0, 0, 0, 0.08);
-  --grid-selected: rgba(0, 0, 0, 0.2);
-  --button-hover: rgba(5, 80, 225, 0.05);
+  --handle: #ffffff;
+  --track: rgba(0, 0, 0, 0.23);
+  --track-active: rgba(5, 80, 225, 0.5);
+  --cell: rgba(0, 0, 0, 0.2);
+  --cell-highlighted: rgba(0, 0, 0, 0.07);
+  --rect-fill: rgba(5, 80, 255, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -29,10 +30,11 @@
     --separator: rgba(255, 255, 255, 0.1);
     --background: #202124;
     --background-elevated: #292a2d;
-    --on-button: #202124;
-    --grid-ghost: rgba(181, 196, 255, 0.2);
-    --grid-inactive: rgba(255, 255, 255, 0.08);
-    --button-hover: rgba(181, 196, 255, 0.08);
-    --grid-selected: rgba(255, 255, 255, 0.2);
+    --handle: #dadce0;
+    --track: rgba(255, 255, 255, 0.56);
+    --track-active: rgba(181, 196, 255, 0.5);
+    --cell: #505053;
+    --cell-highlighted: rgba(255, 255, 255, 0.07);
+    --rect-fill: rgba(181, 196, 255, 0.05);
   }
 }
