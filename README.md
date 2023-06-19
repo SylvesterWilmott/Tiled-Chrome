@@ -24,6 +24,5 @@ Once installed, you can access the extension by clicking the icon in the Chrome 
 
 - Drag rectangles on the grid. Each rectangle represents a window.
 - Press `Undo` to undo the last rectangle.
-- Press `Done` to update your workspace.
+- Press `Apply layout` to update your workspace.
 - If there are enough windows open, they will be resized to match your layout. Otherwise, new windows will be created.
-- Right-click the extension icon to access preferences.
