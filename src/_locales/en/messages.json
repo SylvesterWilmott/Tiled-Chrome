@@ -1,12 +1,12 @@
 {
   "EXT_NAME": {
-    "message": "Tiled - Arrange windows like a pro"
+    "message": "Tiled - Layout manager"
   },
   "EXT_NAME_SHORT": {
     "message": "Tiled"
   },
   "EXT_DESCRIPTION": {
-    "message": "Arrange windows like a pro, effortlessly organize your workspace"
+    "message": "Bring order and harmony to your workspace and enjoy a clutter-free environment"
   },
   "PREFERENCES": {
     "message": "Preferences"
@@ -24,13 +24,13 @@
     "message": "9x9"
   },
   "PREF_PADDING": {
-    "message": "Window Padding"
+    "message": "Window padding"
   },
   "BUTTON_UNDO": {
     "message": "Undo"
   },
   "BUTTON_DONE": {
-    "message": "Apply Layout"
+    "message": "Apply layout"
   },
   "ACCELERATOR_APPLY": {
     "message": "\u23CE"
