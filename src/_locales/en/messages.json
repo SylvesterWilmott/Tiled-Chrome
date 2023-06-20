@@ -32,6 +32,15 @@
   "BUTTON_DONE": {
     "message": "Apply layout"
   },
+  "BUTTON_SAVE": {
+    "message": "Save layout"
+  },
+  "TITLE_PROMPT": {
+    "message": "Enter a name for your layout"
+  },
+  "MAXIMUM_SAVED_ALERT": {
+    "message": "Maximum number of layouts reached"
+  },
   "ACCELERATOR_APPLY": {
     "message": "\u23CE"
   },
@@ -43,5 +52,11 @@
   },
   "ACCELERATOR_UNDO_MAC": {
     "message": "\u2318Z"
+  },
+  "ACCELERATOR_SAVE": {
+    "message": "Ctrl+S"
+  },
+  "ACCELERATOR_SAVE_MAC": {
+    "message": "\u2318S"
   }
 }

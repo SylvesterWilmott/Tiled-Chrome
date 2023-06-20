@@ -6,6 +6,10 @@
   user-select: none;
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 .no-transition,
 .no-transition:before {
   transition: none !important;
@@ -17,17 +21,23 @@ body {
   width: auto;
   position: relative;
   padding: 0 0 4px 0;
+  overscroll-behavior: none;
 }
 
 .grid-container {
   border-bottom: 1px solid var(--separator);
   padding: 48px;
+  overflow: hidden;
+  top: 0;
+  background: var(--background-elevated);
+  z-index: 10;
 }
 
 .grid-stage {
   box-shadow: inset 0px 0px 0px 1px var(--neutral-primary),
-    0px 1px 6px 0px rgba(0, 0, 0, 0.15);
+    0px 2px 6px 0px rgba(0, 0, 0, 0.15);
   padding: 12px;
+  position: relative;
 }
 
 .grid {
@@ -193,8 +203,16 @@ body {
   border-bottom: 1px solid var(--separator);
 }
 
+.group:empty {
+  display: none;
+}
+
 .group:last-child {
-  border: none;
+  border-bottom: none;
+}
+
+.group:has(+ .group:empty) {
+  border: 0;
 }
 
 .item {
@@ -389,4 +407,27 @@ input:checked + .track {
 .item-icon.undo {
   -webkit-mask-image: url(../images/undo.svg);
   mask-image: url(../images/undo.svg);
+}
+
+.item-icon.delete {
+  -webkit-mask-image: url(../images/delete.svg);
+  mask-image: url(../images/delete.svg);
+}
+
+.item-icon.layout {
+  -webkit-mask-image: url(../images/layout.svg);
+  mask-image: url(../images/layout.svg);
+}
+
+.item-icon.save {
+  -webkit-mask-image: url(../images/save.svg);
+  mask-image: url(../images/save.svg);
+}
+
+#savedLayouts .delete {
+  pointer-events: all;
+}
+
+#savedLayouts .delete:hover {
+  background-color: var(--neutral-primary);
 }
