@@ -18,7 +18,7 @@
 body {
   background-color: var(--background-elevated);
   height: auto;
-  width: auto;
+  width: 420px;
   position: relative;
   padding: 0 0 4px 0;
   overscroll-behavior: none;
@@ -26,11 +26,14 @@ body {
 
 .grid-container {
   border-bottom: 1px solid var(--separator);
-  padding: 48px;
+  padding: 48px 0;
   overflow: hidden;
   top: 0;
   background: var(--background-elevated);
   z-index: 10;
+  position: relative;
+  width: 100%;
+  text-align: center;
 }
 
 .grid-stage {
@@ -38,6 +41,8 @@ body {
     0px 2px 6px 0px rgba(0, 0, 0, 0.15);
   padding: 12px;
   position: relative;
+  margin: auto;
+  display: inline-block;
 }
 
 .grid {
@@ -233,7 +238,8 @@ body {
 .item > .left-detail {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  flex-grow: 1;
 }
 
 .item.separated {
@@ -242,11 +248,14 @@ body {
 
 .right-detail {
   color: var(--neutral-secondary);
+  width: auto;
+  flex-shrink: 0;
 }
 
 .nav-index > .left-detail,
 .nav-index > .right-detail {
   pointer-events: none;
+  min-width: 0;
 }
 
 select {
@@ -298,6 +307,9 @@ select:hover {
 .label {
   font-size: 13px;
   margin-right: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-icon + .label {
@@ -375,6 +387,8 @@ input:checked + .track {
 .item-icon {
   height: 20px;
   width: 20px;
+  min-width: 20px;
+  background-color: var(--neutral-secondary);
 }
 
 .left-detail .item-icon {
@@ -404,11 +418,6 @@ input:checked + .track {
   mask-image: url(../images/apply.svg);
 }
 
-.item-icon.undo {
-  -webkit-mask-image: url(../images/undo.svg);
-  mask-image: url(../images/undo.svg);
-}
-
 .item-icon.delete {
   -webkit-mask-image: url(../images/delete.svg);
   mask-image: url(../images/delete.svg);
@@ -422,6 +431,11 @@ input:checked + .track {
 .item-icon.save {
   -webkit-mask-image: url(../images/save.svg);
   mask-image: url(../images/save.svg);
+}
+
+.item-icon.undo {
+  -webkit-mask-image: url(../images/undo.svg);
+  mask-image: url(../images/undo.svg);
 }
 
 #savedLayouts .delete {
