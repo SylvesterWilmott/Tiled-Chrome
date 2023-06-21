@@ -29,6 +29,12 @@
   "BUTTON_UNDO": {
     "message": "Undo"
   },
+  "BUTTON_NEW": {
+    "message": "New layout"
+  },
+  "BUTTON_CLEAR": {
+    "message": "Clear grid"
+  },
   "BUTTON_DONE": {
     "message": "Apply layout"
   },
@@ -58,5 +64,11 @@
   },
   "ACCELERATOR_SAVE_MAC": {
     "message": "\u2318S"
+  },
+  "ACCELERATOR_CLEAR": {
+    "message": "Ctrl+C"
+  },
+  "ACCELERATOR_CLEAR_MAC": {
+    "message": "\u2318C"
   }
 }

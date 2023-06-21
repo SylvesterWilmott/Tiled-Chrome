@@ -100,3 +100,24 @@ export function updateWindowState (id, state) {
     )
   })
 }
+
+export function createInternal (obj) {
+  return new Promise((resolve, reject) => {
+    chrome.windows.create(
+      {
+        height: obj.height,
+        width: obj.width,
+        top: obj.top,
+        left: obj.left,
+        url: obj.url,
+        type: 'popup'
+      },
+      function () {
+        if (chrome.runtime.lastError) {
+          reject(chrome.runtime.lastError.message)
+        }
+        resolve()
+      }
+    )
+  })
+}

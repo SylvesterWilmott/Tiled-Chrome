@@ -7,62 +7,19 @@
     <script type="module" src="../js/main.js"></script>
   </head>
   <body>
-    <div class="grid-container">
-      <div class="grid-stage" id="stage">
-        <table id="grid" class="grid"></table>
+    <header class="header">
+      <div class="left-detail">
+        <div class="label-large" data-localize="EXT_NAME_SHORT"></div>
       </div>
-    </div>
+    </header>
     <div class="group">
-      <div id="apply" class="item nav-index">
+      <div id="newLayout" class="item nav-index">
         <div class="left-detail">
-          <div class="item-icon apply"></div>
-          <div class="label" data-localize="BUTTON_DONE"></div>
+          <div class="item-icon add"></div>
+          <div class="label" data-localize="BUTTON_NEW"></div>
         </div>
         <div class="right-detail">
-          <div class="accelerator" data-accelerator="APPLY"></div>
-        </div>
-      </div>
-      <div id="save" class="item nav-index">
-        <div class="left-detail">
-          <div class="item-icon save"></div>
-          <div class="label" data-localize="BUTTON_SAVE"></div>
-        </div>
-        <div class="right-detail">
-          <div class="accelerator" data-accelerator="SAVE"></div>
-        </div>
-      </div>
-      <div id="undo" class="item nav-index">
-        <div class="left-detail">
-          <div class="item-icon undo"></div>
-          <div class="label" data-localize="BUTTON_UNDO"></div>
-        </div>
-        <div class="right-detail">
-          <div class="accelerator" data-accelerator="UNDO"></div>
-        </div>
-      </div>
-    </div>
-    <div class="group">
-      <label for="win_padding" class="item nav-index">
-        <div class="left-detail">
-          <div class="item-icon padding"></div>
-          <div class="label" data-localize="PREF_PADDING"></div>
-        </div>
-        <div class="right-detail">
-          <label class="switch">
-            <input type="checkbox" id="win_padding" />
-            <span class="track no-transition"></span>
-          </label>
-        </div>
-      </label>
-      <div class="item">
-        <div class="left-detail">
-          <div class="item-icon gridSize"></div>
-          <div class="label" data-localize="PREF_GRID_SIZE"></div>
-        </div>
-        <div class="right-detail">
-          <div class="select">
-            <select name="grid_size" id="grid_size"></select>
-          </div>
+          <div class="accelerator" data-accelerator="NEW"></div>
         </div>
       </div>
     </div>
