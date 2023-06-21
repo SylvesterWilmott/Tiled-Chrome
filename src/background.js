@@ -4,7 +4,6 @@
 
 import * as windows from './js/windows.js'
 import * as display from './js/display.js'
-import * as storage from './js/storage.js'
 
 chrome.runtime.onMessage.addListener(onMessageReceived)
 
@@ -12,23 +11,13 @@ function onMessageReceived (message, sender, sendResponse) {
   handleNewWindowDimensions(
     message.rectangles,
     message.gridSize,
-    message.currentWindowId
+    message.currentWindowId,
+    message.padding
   )
   sendResponse()
 }
 
-/**
- *
- * Handles the resizing and creation of windows based on a grid layout, given an array of selection rectangles,
- * a grid size, and the id of the current window.
- * @async
- * @function handleNewWindowDimensions
- * @param {Array} arr - An array of selection rectangles
- * @param {number} gridSize - The size of the grid to use
- * @param {number} currentWindowId - The id of the current window
- * @returns {void}
- */
-async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
+async function handleNewWindowDimensions (arr, gridSize, currentWindowId, winPadding) {
   const existingWindows = await windows.getWindows().catch((error) => {
     console.error('An error occurred:', error)
   })
@@ -61,13 +50,7 @@ async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
     console.error('An error occurred:', error)
   })
 
-  const storedPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
-    .catch((error) => {
-      console.error('An error occurred:', error)
-    })
-
-  const padding = storedPreferences.win_padding.status ? 10 : 0
+  const padding = winPadding ? 10 : 0
   const numberOfGridcells = gridSize
   const percentagePerGridCell = 100 / numberOfGridcells
   const workArea = currentDisplay.workArea
@@ -125,19 +108,6 @@ async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
   }
 }
 
-/**
- *
- * Finds the display that contains the most corners of the current window.
- * @async
- * @function getDisplayContainingCurrentWindow
- * @param {Array<Object>} connectedDisplays - An array of objects representing the connected displays.
- * @param {Object} currentWindow - An object representing the current window.
- * @param {number} currentWindow.top - The top coordinate of the current window.
- * @param {number} currentWindow.left - The left coordinate of the current window.
- * @param {number} currentWindow.width - The width of the current window.
- * @param {number} currentWindow.height - The height of the current window.
- * @returns {Promise<Object>} - A Promise that resolves with the display that contains the most corners of the current window.
- */
 async function getDisplayContainingCurrentWindow (
   connectedDisplays,
   currentWindow

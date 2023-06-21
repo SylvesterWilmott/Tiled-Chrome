@@ -19,5 +19,13 @@
   "action": {
     "default_title": "__MSG_EXT_NAME_SHORT__",
     "default_popup": "./html/index.html"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      }
+    }
   }
 }
