@@ -335,19 +335,12 @@ function setupGrid () {
       console.error('An error occurred:', error)
     })
 
-    const storedPreferences = await storage
-      .load('preferences', storage.preferenceDefaults)
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
-
     try {
       await message.send({
         msg: 'layout',
         rectangles: rectanglesDrawn,
         gridSize,
-        currentWindowId: currentWindow.id,
-        padding: storedPreferences.win_padding.status
+        currentWindowId: currentWindow.id
       })
     } catch (error) {
       console.error('An error occurred:', error)
@@ -392,18 +385,11 @@ function setupGrid () {
 
     const gridSize = table.rows[0].cells.length
 
-    const storedPreferences = await storage
-      .load('preferences', storage.preferenceDefaults)
-      .catch((error) => {
-        console.error('An error occurred:', error)
-      })
-
     const layoutObj = {
       name,
       id: uid.create(),
       layout: rectanglesDrawn,
-      gridSize,
-      padding: storedPreferences.win_padding.status
+      gridSize
     }
 
     storedLayouts.push(layoutObj)
@@ -645,8 +631,7 @@ async function onSavedLayoutClicked (e) {
         msg: 'layout',
         rectangles: foundObj.layout,
         gridSize: foundObj.gridSize,
-        currentWindowId: currentWindow.id,
-        padding: foundObj.padding
+        currentWindowId: currentWindow.id
       })
     } catch (error) {
       console.error('An error occurred:', error)
