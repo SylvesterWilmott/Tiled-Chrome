@@ -1,9 +1,5 @@
 'use strict'
 
-// Todo
-// show saved layout on grid when selected
-// Add select to nav-index
-
 /* global chrome, Audio */
 
 import * as navigation from './navigation.js'
