@@ -343,6 +343,7 @@ function setupGrid () {
 
     try {
       await message.send({
+        msg: 'layout',
         rectangles: rectanglesDrawn,
         gridSize,
         currentWindowId: currentWindow.id,
@@ -641,6 +642,7 @@ async function onSavedLayoutClicked (e) {
 
     try {
       await message.send({
+        msg: 'layout',
         rectangles: foundObj.layout,
         gridSize: foundObj.gridSize,
         currentWindowId: currentWindow.id,

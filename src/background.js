@@ -7,14 +7,21 @@ import * as display from './js/display.js'
 
 chrome.runtime.onMessage.addListener(onMessageReceived)
 
-function onMessageReceived (message, sender, sendResponse) {
-  handleNewWindowDimensions(
+async function onMessageReceived (message, sender, sendResponse) {
+  if (message.msg === 'layout') {
+    sendResponse()
+  } else {
+    return
+  }
+
+  await handleNewWindowDimensions(
     message.rectangles,
     message.gridSize,
     message.currentWindowId,
     message.padding
-  )
-  sendResponse()
+  ).catch((error) => {
+    console.error('An error occurred:', error)
+  })
 }
 
 async function handleNewWindowDimensions (arr, gridSize, currentWindowId, winPadding) {
