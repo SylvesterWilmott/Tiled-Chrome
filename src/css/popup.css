@@ -18,7 +18,7 @@
 body {
   background-color: var(--background-elevated);
   width: 800px;
-  height: 540px;
+  height: 520px;
   position: relative;
   overflow: hidden;
 }
