@@ -3,7 +3,6 @@
 // Todo
 // show saved layout on grid when selected
 // Add select to nav-index
-// Run standard.js
 
 /* global chrome, Audio */
 
@@ -173,7 +172,7 @@ function setupGrid () {
     cell.addEventListener('mouseenter', onCellMouseenter)
   }
 
-  function onActionClicked(e) {
+  function onActionClicked (e) {
     const target = e.target
     const targetId = target.id
 
