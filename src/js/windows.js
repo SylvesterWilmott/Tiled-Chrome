@@ -6,7 +6,7 @@ export function getWindows () {
   return new Promise((resolve, reject) => {
     chrome.windows.getAll(function (windows) {
       if (chrome.runtime.lastError) {
-        console.log(chrome.runtime.lastError.message)
+        reject(chrome.runtime.lastError.message)
       }
       resolve(windows)
     })
@@ -17,7 +17,7 @@ export function getCurrentWindow () {
   return new Promise((resolve, reject) => {
     chrome.windows.getCurrent(function (currentWindow) {
       if (chrome.runtime.lastError) {
-        console.log(chrome.runtime.lastError.message)
+        reject(chrome.runtime.lastError.message)
       }
       resolve(currentWindow)
     })
