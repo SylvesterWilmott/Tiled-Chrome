@@ -126,7 +126,7 @@ body {
 .rect_9 > div:before,
 .rect_10 > div:before {
   content: "";
-  height: 12px;
+  height: 14px;
   width: 100%;
   position: absolute;
   border-bottom: 1px solid var(--primary);
@@ -151,8 +151,8 @@ body {
   width: 4px;
   position: absolute;
   box-shadow: inset 0px 0px 0px 1px var(--primary);
-  top: 4px;
-  left: 4px;
+  top: 5px;
+  left: 5px;
   border-radius: 50%;
 }
 
