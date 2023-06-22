@@ -179,6 +179,17 @@ function setupGrid () {
     } else if (targetId === 'save') {
       saveLayout()
     } else if (targetId === 'clear') {
+      clearAllrectangles()
+    }
+  }
+
+  function clearAllrectangles() {
+    const numberOfRectangles = rectanglesDrawn.length
+    
+    if (numberOfRectangles === 0) {
+      playSound('error')
+      return
+    } else {
       clearAllSelections()
     }
   }
@@ -220,11 +231,6 @@ function setupGrid () {
 
   function clearAllSelections () {
     const numberOfRectangles = rectanglesDrawn.length
-
-    if (numberOfRectangles === 0) {
-      playSound('error')
-      return
-    }
 
     for (let i = 0; i < numberOfRectangles; i++) {
       removePreviousSelection()
@@ -601,7 +607,7 @@ async function renderLayoutItem (layout) {
   const labelElement = fragment.querySelector('.label')
   labelElement.innerText = layout.name
 
-  savedLayoutsElement.appendChild(fragment)
+  savedLayoutsElement.prepend(fragment)
 }
 
 async function onSavedLayoutClicked (e) {
