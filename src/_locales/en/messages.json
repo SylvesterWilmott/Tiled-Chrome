@@ -29,17 +29,14 @@
   "BUTTON_UNDO": {
     "message": "Undo"
   },
-  "BUTTON_NEW": {
-    "message": "New layout"
-  },
   "BUTTON_CLEAR": {
-    "message": "Clear grid"
+    "message": "Clear"
   },
   "BUTTON_DONE": {
-    "message": "Apply layout"
+    "message": "Apply"
   },
   "BUTTON_SAVE": {
-    "message": "Save layout"
+    "message": "Save"
   },
   "TITLE_PROMPT": {
     "message": "Enter a name for your layout"

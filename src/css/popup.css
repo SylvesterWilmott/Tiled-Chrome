@@ -46,7 +46,7 @@ body {
 }
 
 .grid-container {
-  overflow: auto;
+  overflow: hidden;
   background: var(--background);
   position: relative;
   width: 100%;
@@ -54,7 +54,6 @@ body {
   height: 100vh;
   display: flex;
   align-items: center;
-  padding: 48px;
 }
 
 .grid-stage {
@@ -400,5 +399,14 @@ input:checked + .track {
 }
 
 #savedLayouts .item:hover .delete {
+  display: block;
+}
+
+#savedLayouts:not(:empty)::before {
+  content: 'Saved layouts';
+  padding: 16px 16px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--neutral-secondary);
   display: block;
 }

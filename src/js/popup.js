@@ -1,5 +1,10 @@
 'use strict'
 
+// Todo
+// show saved layout on grid when selected
+// Add select to nav-index
+// Run standard.js
+
 /* global chrome, Audio */
 
 import * as navigation from './navigation.js'
@@ -221,10 +226,13 @@ function setupGrid () {
   function clearAllSelections () {
     const numberOfRectangles = rectanglesDrawn.length
 
-    if (numberOfRectangles > 0) {
-      for (let i = 0; i < numberOfRectangles; i++) {
-        removePreviousSelection()
-      }
+    if (numberOfRectangles === 0) {
+      playSound('error')
+      return
+    }
+
+    for (let i = 0; i < numberOfRectangles; i++) {
+      removePreviousSelection()
     }
   }
 
@@ -580,6 +588,8 @@ function onDocumentKeydown (e) {
   } else if (e.key === 'Backspace' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
     document.getElementById('clear').click()
+  } else if (e.key === 'Tab') {
+    e.preventDefault()
   }
 }
 
