@@ -107,9 +107,10 @@ function removeAllSelections () {
 }
 
 function scrollToTop () {
-  window.scrollTo(0, 0)
+  document.getElementById('menu').scrollTo(0, 0)
 }
 
 function scrollToBottom () {
-  window.scrollTo(0, document.body.scrollHeight)
+  const menu = document.getElementById('menu')
+  menu.scrollTo(0, menu.scrollHeight)
 }

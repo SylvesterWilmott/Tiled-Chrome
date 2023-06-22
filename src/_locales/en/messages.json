@@ -29,8 +29,20 @@
   "BUTTON_UNDO": {
     "message": "Undo"
   },
+  "BUTTON_CLEAR": {
+    "message": "Clear"
+  },
   "BUTTON_DONE": {
-    "message": "Apply layout"
+    "message": "Apply"
+  },
+  "BUTTON_SAVE": {
+    "message": "Save"
+  },
+  "TITLE_PROMPT": {
+    "message": "Enter a name for your layout"
+  },
+  "MAXIMUM_SAVED_ALERT": {
+    "message": "Maximum number of layouts reached"
   },
   "ACCELERATOR_APPLY": {
     "message": "\u23CE"
@@ -43,5 +55,23 @@
   },
   "ACCELERATOR_UNDO_MAC": {
     "message": "\u2318Z"
+  },
+  "ACCELERATOR_SAVE": {
+    "message": "Ctrl+S"
+  },
+  "ACCELERATOR_SAVE_MAC": {
+    "message": "\u2318S"
+  },
+  "ACCELERATOR_CLEAR": {
+    "message": "Ctrl+\u232B"
+  },
+  "ACCELERATOR_CLEAR_MAC": {
+    "message": "\u2318\u232B"
+  },
+  "ACCELERATOR_NEW": {
+    "message": "Ctrl+N"
+  },
+  "ACCELERATOR_NEW_MAC": {
+    "message": "\u2318N"
   }
 }

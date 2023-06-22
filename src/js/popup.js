@@ -7,23 +7,25 @@ import * as windows from './windows.js'
 import * as message from './message.js'
 import * as storage from './storage.js'
 import * as i18n from './localize.js'
+import * as uid from './uid.js'
 
 document.addEventListener('DOMContentLoaded', init)
 
 async function init () {
   try {
-    try {
-      await Promise.all([restorePreferences(), buildGrid(), i18n.localize()])
-    } catch (error) {
-      console.error('An error occurred:', error)
-    }
+    await Promise.all([
+      restorePreferences(),
+      buildGrid(),
+      renderSavedLayouts(),
+      i18n.localize()
+    ])
   } catch (error) {
     console.error('An error occurred:', error)
   }
 
   setupGrid()
-  navigation.init()
   registerListeners()
+  navigation.init()
   ready()
 }
 
@@ -54,6 +56,18 @@ function postponeAnimationUntilReady () {
   }
 }
 
+async function renderSavedLayouts () {
+  const storedLayouts = await storage.load('layouts', []).catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  if (storedLayouts.length > 0) {
+    for (const layout of storedLayouts) {
+      renderLayoutItem(layout)
+    }
+  }
+}
+
 async function restorePreferences () {
   const storedPreferences = await storage
     .load('preferences', storage.preferenceDefaults)
@@ -72,8 +86,6 @@ async function restorePreferences () {
       }
     } else if (preferenceObj.type === 'select') {
       const preferenceElement = document.getElementById(preferenceName)
-
-      console.log(preferenceElement)
 
       if (preferenceElement) {
         // Add options to select element
@@ -135,17 +147,94 @@ function setupGrid () {
     }
   }
 
+  const onAll = (target, event, handler) => {
+    const elements = document.querySelectorAll(target)
+
+    for (const el of elements) {
+      el.addEventListener(event, handler, false)
+    }
+  }
+
+  onAll('select', 'change', onSelectChanged)
   on('grid', 'mousedown', onTableMousedown)
   on('grid', 'mousemove', onTableMousemove)
   on(document, 'mouseup', onDocumentMouseup)
   on(document, 'keydown', onDocumentKeydown)
-  on('apply', 'click', onDoneButtonPressed)
-  on('undo', 'click', onUndoButtonPressed)
+  onAll('div.nav-index', 'click', onActionClicked)
 
   const allCells = document.querySelectorAll('.cell')
 
   for (const cell of allCells) {
     cell.addEventListener('mouseenter', onCellMouseenter)
+  }
+
+  function onActionClicked (e) {
+    const target = e.target
+    const targetId = target.id
+
+    if (targetId === 'apply') {
+      applyLayout()
+    } else if (targetId === 'undo') {
+      undo()
+    } else if (targetId === 'save') {
+      saveLayout()
+    } else if (targetId === 'clear') {
+      clearAllrectangles()
+    }
+  }
+
+  function clearAllrectangles() {
+    const numberOfRectangles = rectanglesDrawn.length
+    
+    if (numberOfRectangles === 0) {
+      playSound('error')
+      return
+    } else {
+      clearAllSelections()
+    }
+  }
+
+  async function onSelectChanged (e) {
+    const target = e.target
+    const targetId = target.id
+
+    const storedPreferences = await storage
+      .load('preferences', storage.preferenceDefaults)
+      .catch((error) => {
+        console.error('An error occurred:', error)
+        target.checked = !target.checked
+      })
+
+    const preference = storedPreferences[targetId]
+
+    if (!preference) {
+      return
+    }
+
+    preference.status = target.value
+
+    try {
+      await storage.save('preferences', storedPreferences)
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+
+    if (target.id === 'grid_size') {
+      try {
+        await buildGrid()
+        clearAllSelections()
+      } catch (error) {
+        console.error('An error occurred:', error)
+      }
+    }
+  }
+
+  function clearAllSelections () {
+    const numberOfRectangles = rectanglesDrawn.length
+
+    for (let i = 0; i < numberOfRectangles; i++) {
+      removePreviousSelection()
+    }
   }
 
   // This is required for resizing cells once dragging begins
@@ -227,19 +316,20 @@ function setupGrid () {
   function createRectangle (boundingBox, number) {
     const rectangle = document.createElement('div')
     const rectangleInner = document.createElement('div')
+    const stage = document.getElementById('stage')
 
     rectangle.style.left = `${boundingBox.left}px`
     rectangle.style.top = `${boundingBox.top}px`
     rectangle.style.width = `${boundingBox.right - boundingBox.left}px`
     rectangle.style.height = `${boundingBox.bottom - boundingBox.top}px`
-    rectangle.style.zIndex = number
+    rectangle.style.zIndex = number + 10
     rectangle.classList.add('rect_' + number)
 
     rectangle.prepend(rectangleInner)
-    document.body.prepend(rectangle)
+    stage.prepend(rectangle)
   }
 
-  async function onDoneButtonPressed () {
+  async function applyLayout () {
     if (!rectanglesDrawn.length) {
       playSound('error')
       return
@@ -253,6 +343,7 @@ function setupGrid () {
 
     try {
       await message.send({
+        msg: 'layout',
         rectangles: rectanglesDrawn,
         gridSize,
         currentWindowId: currentWindow.id
@@ -260,10 +351,8 @@ function setupGrid () {
     } catch (error) {
       console.error('An error occurred:', error)
     }
-  }
 
-  function onUndoButtonPressed () {
-    undo()
+    clearAllSelections()
   }
 
   function undo () {
@@ -273,6 +362,52 @@ function setupGrid () {
     }
 
     removePreviousSelection()
+  }
+
+  async function saveLayout () {
+    if (!rectanglesDrawn.length) {
+      playSound('error')
+      return
+    }
+
+    const maxLayoutsAllowed = 50
+
+    const storedLayouts = await storage.load('layouts', []).catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+    if (storedLayouts.length >= maxLayoutsAllowed) {
+      playSound('error')
+      window.alert(chrome.i18n.getMessage('MAXIMUM_SAVED_ALERT'))
+      return
+    }
+
+    // Prompt for a name
+    const name = window.prompt(chrome.i18n.getMessage('TITLE_PROMPT'))
+
+    if (name === null) {
+      return
+    }
+
+    const gridSize = table.rows[0].cells.length
+
+    const layoutObj = {
+      name,
+      id: uid.create(),
+      layout: rectanglesDrawn,
+      gridSize
+    }
+
+    storedLayouts.push(layoutObj)
+
+    try {
+      await storage.save('layouts', storedLayouts)
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+
+    clearAllSelections()
+    renderLayoutItem(layoutObj)
   }
 
   async function onDocumentMouseup () {
@@ -322,11 +457,6 @@ function setupGrid () {
         startCell = null
         endCell = null
         removeAllSelections()
-      } else if (rectanglesDrawn.length) {
-        e.preventDefault()
-        undo()
-      } else {
-        window.close()
       }
     }
   }
@@ -357,6 +487,8 @@ function setupGrid () {
       return null
     }
 
+    const parentContainer = document.getElementById('stage')
+    const parentRect = parentContainer.getBoundingClientRect()
     let left = Infinity
     let top = Infinity
     let right = -Infinity
@@ -364,10 +496,15 @@ function setupGrid () {
 
     for (const element of elements) {
       const rect = element.getBoundingClientRect()
-      if (rect.left < left) left = rect.left
-      if (rect.top < top) top = rect.top
-      if (rect.right > right) right = rect.right
-      if (rect.bottom > bottom) bottom = rect.bottom
+      const relativeLeft = rect.left - parentRect.left
+      const relativeTop = rect.top - parentRect.top
+      const relativeRight = rect.right - parentRect.left
+      const relativeBottom = rect.bottom - parentRect.top
+
+      if (relativeLeft < left) left = relativeLeft
+      if (relativeTop < top) top = relativeTop
+      if (relativeRight > right) right = relativeRight
+      if (relativeBottom > bottom) bottom = relativeBottom
     }
 
     return { left, top, right, bottom }
@@ -392,21 +529,8 @@ function registerListeners () {
   }
 
   onAll('input[type="checkbox"]', 'change', onCheckBoxChanged)
-  onAll('select', 'change', onSelectChanged)
+  on('savedLayouts', 'click', onSavedLayoutClicked)
   on(document, 'keydown', onDocumentKeydown)
-}
-
-function onDocumentKeydown (e) {
-  if (e.key === 'Enter') {
-    const navElements = document.querySelectorAll('.nav-index:not(.selected)')
-
-    if (navElements.length === 0) {
-      document.getElementById('apply').click()
-    }
-  } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
-    e.preventDefault()
-    document.getElementById('undo').click()
-  }
 }
 
 async function onCheckBoxChanged (e) {
@@ -422,7 +546,9 @@ async function onCheckBoxChanged (e) {
 
   const preference = storedPreferences[targetId]
 
-  if (!preference) return
+  if (!preference) {
+    return
+  }
 
   preference.status = target.checked
 
@@ -434,41 +560,117 @@ async function onCheckBoxChanged (e) {
   }
 }
 
-async function onSelectChanged (e) {
-  const target = e.target
-  const targetId = target.id
+function onDocumentKeydown (e) {
+  if (e.key === 'Enter') {
+    const navElements = document.querySelectorAll('.nav-index:not(.selected)')
 
-  const storedPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
-    .catch((error) => {
-      console.error('An error occurred:', error)
-      target.checked = !target.checked
-    })
-
-  const preference = storedPreferences[targetId]
-
-  if (!preference) return
-
-  preference.status = target.value
-
-  console.log(storedPreferences)
-
-  try {
-    await storage.save('preferences', storedPreferences)
-  } catch (error) {
-    console.error('An error occurred:', error)
-  }
-
-  if (target.id === 'grid_size') {
-    try {
-      window.location.reload()
-    } catch (error) {
-      console.error('An error occurred:', error)
+    if (navElements.length === 0) {
+      document.getElementById('apply').click()
     }
+  } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
+    document.getElementById('save').click()
+  } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
+    document.getElementById('undo').click()
+  } else if (e.key === 'Backspace' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
+    document.getElementById('clear').click()
+  } else if (e.key === 'Tab') {
+    e.preventDefault()
   }
 }
 
 function playSound (sound) {
   const playable = new Audio(chrome.runtime.getURL(`audio/${sound}.mp3`))
   playable.play()
+}
+
+async function renderLayoutItem (layout) {
+  const savedLayoutsElement = document.getElementById('savedLayouts')
+  const pathToPredefinedHtml = chrome.runtime.getURL('../html/fragment.html')
+
+  const response = await fetch(pathToPredefinedHtml).catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const html = await response.text().catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const fragment = document.createRange().createContextualFragment(html)
+
+  const itemElement = fragment.querySelector('.item')
+  itemElement.dataset.id = layout.id
+  itemElement.title = layout.name
+
+  const labelElement = fragment.querySelector('.label')
+  labelElement.innerText = layout.name
+
+  savedLayoutsElement.prepend(fragment)
+}
+
+async function onSavedLayoutClicked (e) {
+  const target = e.target
+
+  if (target.classList.contains('item')) {
+    const itemId = target.dataset.id
+
+    const storedLayouts = await storage.load('layouts', []).catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+    const foundObjIndex = storedLayouts.findIndex((obj) => obj.id === itemId)
+
+    if (foundObjIndex === -1) {
+      return
+    }
+
+    const foundObj = storedLayouts[foundObjIndex]
+
+    const currentWindow = await windows.getCurrentWindow().catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+    try {
+      await message.send({
+        msg: 'layout',
+        rectangles: foundObj.layout,
+        gridSize: foundObj.gridSize,
+        currentWindowId: currentWindow.id
+      })
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  } else if (target.classList.contains('delete')) {
+    const itemElement = target.closest('.item')
+
+    if (!itemElement) {
+      return
+    }
+
+    const itemId = itemElement.dataset.id
+
+    const storedLayouts = await storage.load('layouts', []).catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+    const foundObjIndex = storedLayouts.findIndex((obj) => obj.id === itemId)
+
+    if (foundObjIndex === -1) {
+      return
+    }
+
+    storedLayouts.splice(foundObjIndex, 1)
+
+    await storage.save('layouts', storedLayouts).catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+    // Remove closest parent element with class 'item' from DOM
+    itemElement.remove()
+
+    const parentElement = document.getElementById('savedLayouts')
+    parentElement.innerHTML = parentElement.innerHTML.trim()
+  }
 }
