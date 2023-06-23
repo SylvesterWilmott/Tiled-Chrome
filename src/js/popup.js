@@ -220,12 +220,7 @@ function setupGrid () {
     }
 
     if (target.id === 'grid_size') {
-      try {
-        await buildGrid()
-        clearAllSelections()
-      } catch (error) {
-        console.error('An error occurred:', error)
-      }
+      window.location.reload()
     }
   }
 
