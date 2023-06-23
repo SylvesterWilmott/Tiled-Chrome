@@ -21,6 +21,7 @@ body {
   height: 520px;
   position: relative;
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 .columns {
@@ -36,6 +37,7 @@ body {
   border-left: 1px solid var(--separator);
   height: 100vh;
   padding: 4px 0;
+  overscroll-behavior: none;
 }
 
 .header {
