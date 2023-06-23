@@ -171,25 +171,20 @@ function setupGrid () {
   function onActionClicked (e) {
     const target = e.target
     const targetId = target.id
+    const numberOfRectangles = rectanglesDrawn.length
+
+    if (!numberOfRectangles) {
+      playSound('error')
+      return
+    }
 
     if (targetId === 'apply') {
       applyLayout()
     } else if (targetId === 'undo') {
-      undo()
+      removePreviousSelection()
     } else if (targetId === 'save') {
       saveLayout()
     } else if (targetId === 'clear') {
-      clearAllrectangles()
-    }
-  }
-
-  function clearAllrectangles() {
-    const numberOfRectangles = rectanglesDrawn.length
-    
-    if (numberOfRectangles === 0) {
-      playSound('error')
-      return
-    } else {
       clearAllSelections()
     }
   }
@@ -325,11 +320,6 @@ function setupGrid () {
   }
 
   async function applyLayout () {
-    if (!rectanglesDrawn.length) {
-      playSound('error')
-      return
-    }
-
     const gridSize = table.rows[0].cells.length
 
     const currentWindow = await windows.getCurrentWindow().catch((error) => {
@@ -350,21 +340,7 @@ function setupGrid () {
     clearAllSelections()
   }
 
-  function undo () {
-    if (!rectanglesDrawn.length) {
-      playSound('error')
-      return
-    }
-
-    removePreviousSelection()
-  }
-
   async function saveLayout () {
-    if (!rectanglesDrawn.length) {
-      playSound('error')
-      return
-    }
-
     const maxLayoutsAllowed = 50
 
     const storedLayouts = await storage.load('layouts', []).catch((error) => {
