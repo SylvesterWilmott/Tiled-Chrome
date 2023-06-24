@@ -450,10 +450,6 @@ input:checked + .track {
   background-color: var(--neutral-primary);
 }
 
-.edge .left-detail .item-icon.active {
-  background-color: var(--primary);
-}
-
 .edge select {
   font-size: 13px;
   background: transparent;
