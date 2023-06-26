@@ -134,24 +134,24 @@ async function restorePreferences () {
 }
 
 class Grid {
-  constructor() {
-    this.table = document.getElementById('grid');
-    this.maxrectangles = 10;
-    this.rectanglesDrawn = [];
-    this.ghostCount = 0;
-    this.startCell = null;
-    this.endCell = null;
-    this.isDragging = false;
-  
+  constructor () {
+    this.table = document.getElementById('grid')
+    this.maxrectangles = 10
+    this.rectanglesDrawn = []
+    this.ghostCount = 0
+    this.startCell = null
+    this.endCell = null
+    this.isDragging = false
+
     // Bound event handler references
-    this.onTableMousedownBound = this.onTableMousedown.bind(this);
-    this.onTableMousemoveBound = this.onTableMousemove.bind(this);
-    this.onDocumentMouseupBound = this.onDocumentMouseup.bind(this);
-    this.onDocumentKeydownBound = this.onDocumentKeydown.bind(this);
-    this.onActionClickedBound = this.onActionClicked.bind(this);
-    this.onCellMouseenterBound = this.onCellMouseenter.bind(this);
+    this.onTableMousedownBound = this.onTableMousedown.bind(this)
+    this.onTableMousemoveBound = this.onTableMousemove.bind(this)
+    this.onDocumentMouseupBound = this.onDocumentMouseup.bind(this)
+    this.onDocumentKeydownBound = this.onDocumentKeydown.bind(this)
+    this.onActionClickedBound = this.onActionClicked.bind(this)
+    this.onCellMouseenterBound = this.onCellMouseenter.bind(this)
   }
-  
+
   setup (gridSize, display) {
     this.buildGrid(gridSize)
     this.sizeGrid(display)
@@ -179,14 +179,14 @@ class Grid {
     const table = document.getElementById('grid')
     const displayHeight = display.bounds.height
     const displayWidth = display.bounds.width
-    
+
     // Calculate the aspect ratio
-    const largerNumber = Math.max(displayHeight, displayWidth);
-    const smallerNumber = Math.min(displayHeight, displayWidth);
-    const aspectRatio = largerNumber / smallerNumber;
+    const largerNumber = Math.max(displayHeight, displayWidth)
+    const smallerNumber = Math.min(displayHeight, displayWidth)
+    const aspectRatio = largerNumber / smallerNumber
 
     const gridFixedDimension = 350
-    const variableDimension = Math.round(this.getVariableDimension(gridFixedDimension, aspectRatio));
+    const variableDimension = Math.round(this.getVariableDimension(gridFixedDimension, aspectRatio))
 
     if (displayWidth >= displayHeight) {
       table.style.width = `${gridFixedDimension}px`
@@ -197,61 +197,60 @@ class Grid {
     }
   }
 
-  getVariableDimension(fixedWidth, aspectRatio) {
-    return fixedWidth / aspectRatio;
+  getVariableDimension (fixedWidth, aspectRatio) {
+    return fixedWidth / aspectRatio
   }
 
-  attachEventListeners() {
+  attachEventListeners () {
     const on = (target, event, handler) => {
       if (typeof target === 'string') {
-        document.getElementById(target).addEventListener(event, handler, false);
+        document.getElementById(target).addEventListener(event, handler, false)
       } else {
-        target.addEventListener(event, handler, false);
-      }
-    };
-  
-    const onAll = (target, event, handler) => {
-      const elements = document.querySelectorAll(target);
-  
-      for (const el of elements) {
-        el.addEventListener(event, handler, false);
+        target.addEventListener(event, handler, false)
       }
     }
-  
-    on('grid', 'mousedown', this.onTableMousedownBound);
-    on('grid', 'mousemove', this.onTableMousemoveBound);
-    on(document, 'mouseup', this.onDocumentMouseupBound);
-    on(document, 'keydown', this.onDocumentKeydownBound);
-    onAll('div.nav-index', 'click', this.onActionClickedBound);
+
+    const onAll = (target, event, handler) => {
+      const elements = document.querySelectorAll(target)
+
+      for (const el of elements) {
+        el.addEventListener(event, handler, false)
+      }
+    }
+
+    on('grid', 'mousedown', this.onTableMousedownBound)
+    on('grid', 'mousemove', this.onTableMousemoveBound)
+    on(document, 'mouseup', this.onDocumentMouseupBound)
+    on(document, 'keydown', this.onDocumentKeydownBound)
+    onAll('div.nav-index', 'click', this.onActionClickedBound)
   }
-  
-  detachEventListeners() {
+
+  detachEventListeners () {
     const off = (target, event, handler) => {
       if (typeof target === 'string') {
-        const element = document.getElementById(target);
+        const element = document.getElementById(target)
         if (element) {
-          element.removeEventListener(event, handler, false);
+          element.removeEventListener(event, handler, false)
         }
       } else {
-        target.removeEventListener(event, handler, false);
+        target.removeEventListener(event, handler, false)
       }
-    };
-  
+    }
+
     const offAll = (target, event, handler) => {
-      const elements = document.querySelectorAll(target);
-  
+      const elements = document.querySelectorAll(target)
+
       elements.forEach((el) => {
-        el.removeEventListener(event, handler, false);
-      });
-    };
-  
-    off('grid', 'mousedown', this.onTableMousedownBound);
-    off('grid', 'mousemove', this.onTableMousemoveBound);
-    off(document, 'mouseup', this.onDocumentMouseupBound);
-    off(document, 'keydown', this.onDocumentKeydownBound);
-    offAll('div.nav-index', 'click', this.onActionClickedBound);
-  }  
-  
+        el.removeEventListener(event, handler, false)
+      })
+    }
+
+    off('grid', 'mousedown', this.onTableMousedownBound)
+    off('grid', 'mousemove', this.onTableMousemoveBound)
+    off(document, 'mouseup', this.onDocumentMouseupBound)
+    off(document, 'keydown', this.onDocumentKeydownBound)
+    offAll('div.nav-index', 'click', this.onActionClickedBound)
+  }
 
   attachCellListeners () {
     this.table.querySelectorAll('.cell').forEach((cell) => {
