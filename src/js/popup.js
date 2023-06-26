@@ -2,6 +2,7 @@
 
 /* global chrome, Audio */
 
+import * as display from './display.js'
 import * as navigation from './navigation.js'
 import * as windows from './windows.js'
 import * as message from './message.js'
@@ -11,11 +12,12 @@ import * as uid from './uid.js'
 
 document.addEventListener('DOMContentLoaded', init)
 
+let gridInstance
+
 async function init () {
   try {
     await Promise.all([
       restorePreferences(),
-      buildGrid(),
       renderSavedLayouts(),
       i18n.localize()
     ])
@@ -23,7 +25,27 @@ async function init () {
     console.error('An error occurred:', error)
   }
 
-  setupGrid()
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+    })
+
+  const gridSize = parseInt(storedPreferences.grid_size.status)
+
+  const currentWindow = await windows.getCurrentWindow().catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const connectedDisplays = await display.getDisplayInfo().catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const currentDisplay = display.getDisplayContainingCurrentWindow(connectedDisplays, currentWindow)
+
+  gridInstance = new Grid()
+  gridInstance.setup(gridSize, currentDisplay)
+
   registerListeners()
   navigation.init()
   ready()
@@ -31,6 +53,12 @@ async function init () {
 
 function ready () {
   postponeAnimationUntilReady()
+
+  const hiddenElements = document.querySelectorAll('.hidden')
+
+  for (const el of hiddenElements) {
+    el.classList.remove('hidden')
+  }
 }
 
 function postponeAnimationUntilReady () {
@@ -105,73 +133,141 @@ async function restorePreferences () {
   }
 }
 
-async function buildGrid () {
-  const storedPreferences = await storage
-    .load('preferences', storage.preferenceDefaults)
-    .catch((error) => {
-      console.error('An error occurred:', error)
-    })
+class Grid {
+  constructor () {
+    this.table = document.getElementById('grid')
+    this.maxrectangles = 10
+    this.rectanglesDrawn = []
+    this.ghostCount = 0
+    this.startCell = null
+    this.endCell = null
+    this.isDragging = false
 
-  const gridSize = parseInt(storedPreferences.grid_size.status)
-  const table = document.getElementById('grid')
-
-  table.innerHTML = ''
-
-  for (let i = 0; i < gridSize; i++) {
-    const row = document.createElement('tr')
-    for (let j = 0; j < gridSize; j++) {
-      const cell = document.createElement('td')
-      cell.classList.add('cell')
-      row.appendChild(cell)
-    }
-    table.appendChild(row)
+    // Bound event handler references
+    this.onTableMousedownBound = this.onTableMousedown.bind(this)
+    this.onTableMousemoveBound = this.onTableMousemove.bind(this)
+    this.onDocumentMouseupBound = this.onDocumentMouseup.bind(this)
+    this.onDocumentKeydownBound = this.onDocumentKeydown.bind(this)
+    this.onActionClickedBound = this.onActionClicked.bind(this)
+    this.onCellMouseenterBound = this.onCellMouseenter.bind(this)
   }
-}
 
-function setupGrid () {
-  const table = document.getElementById('grid')
+  setup (gridSize, display) {
+    this.buildGrid(gridSize)
+    this.sizeGrid(display)
+    this.attachEventListeners()
+    this.attachCellListeners()
+  }
 
-  const maxrextangles = 10
-  const rectanglesDrawn = []
+  buildGrid (gridSize) {
+    const table = document.getElementById('grid')
 
-  let ghostCount = 0
-  let startCell
-  let endCell
-  let isDragging = false
+    table.innerHTML = ''
 
-  const on = (target, event, handler) => {
-    if (typeof target === 'string') {
-      document.getElementById(target).addEventListener(event, handler, false)
+    for (let i = 0; i < gridSize; i++) {
+      const row = document.createElement('tr')
+      for (let j = 0; j < gridSize; j++) {
+        const cell = document.createElement('td')
+        cell.classList.add('cell')
+        row.appendChild(cell)
+      }
+      table.appendChild(row)
+    }
+  }
+
+  sizeGrid (display) {
+    const table = document.getElementById('grid')
+    const displayHeight = display.bounds.height
+    const displayWidth = display.bounds.width
+
+    // Calculate the aspect ratio
+    const largerNumber = Math.max(displayHeight, displayWidth)
+    const smallerNumber = Math.min(displayHeight, displayWidth)
+    const aspectRatio = largerNumber / smallerNumber
+
+    const gridFixedDimension = 350
+    const variableDimension = Math.round(this.getVariableDimension(gridFixedDimension, aspectRatio))
+
+    if (displayWidth >= displayHeight) {
+      table.style.width = `${gridFixedDimension}px`
+      table.style.height = `${variableDimension}px`
     } else {
-      target.addEventListener(event, handler, false)
+      table.style.width = `${variableDimension}px`
+      table.style.height = `${gridFixedDimension}px`
     }
   }
 
-  const onAll = (target, event, handler) => {
-    const elements = document.querySelectorAll(target)
+  getVariableDimension (fixedWidth, aspectRatio) {
+    return fixedWidth / aspectRatio
+  }
 
-    for (const el of elements) {
-      el.addEventListener(event, handler, false)
+  attachEventListeners () {
+    const on = (target, event, handler) => {
+      if (typeof target === 'string') {
+        document.getElementById(target).addEventListener(event, handler, false)
+      } else {
+        target.addEventListener(event, handler, false)
+      }
     }
+
+    const onAll = (target, event, handler) => {
+      const elements = document.querySelectorAll(target)
+
+      for (const el of elements) {
+        el.addEventListener(event, handler, false)
+      }
+    }
+
+    on('grid', 'mousedown', this.onTableMousedownBound)
+    on('grid', 'mousemove', this.onTableMousemoveBound)
+    on(document, 'mouseup', this.onDocumentMouseupBound)
+    on(document, 'keydown', this.onDocumentKeydownBound)
+    onAll('div.nav-index', 'click', this.onActionClickedBound)
   }
 
-  onAll('select', 'change', onSelectChanged)
-  on('grid', 'mousedown', onTableMousedown)
-  on('grid', 'mousemove', onTableMousemove)
-  on(document, 'mouseup', onDocumentMouseup)
-  on(document, 'keydown', onDocumentKeydown)
-  onAll('div.nav-index', 'click', onActionClicked)
+  detachEventListeners () {
+    const off = (target, event, handler) => {
+      if (typeof target === 'string') {
+        const element = document.getElementById(target)
+        if (element) {
+          element.removeEventListener(event, handler, false)
+        }
+      } else {
+        target.removeEventListener(event, handler, false)
+      }
+    }
 
-  const allCells = document.querySelectorAll('.cell')
+    const offAll = (target, event, handler) => {
+      const elements = document.querySelectorAll(target)
 
-  for (const cell of allCells) {
-    cell.addEventListener('mouseenter', onCellMouseenter)
+      elements.forEach((el) => {
+        el.removeEventListener(event, handler, false)
+      })
+    }
+
+    off('grid', 'mousedown', this.onTableMousedownBound)
+    off('grid', 'mousemove', this.onTableMousemoveBound)
+    off(document, 'mouseup', this.onDocumentMouseupBound)
+    off(document, 'keydown', this.onDocumentKeydownBound)
+    offAll('div.nav-index', 'click', this.onActionClickedBound)
   }
 
-  function onActionClicked (e) {
+  attachCellListeners () {
+    this.table.querySelectorAll('.cell').forEach((cell) => {
+      cell.addEventListener('mouseenter', this.onCellMouseenterBound)
+    })
+  }
+
+  detachCellListeners () {
+    this.table.querySelectorAll('.cell').forEach((cell) => {
+      cell.removeEventListener('mouseenter', this.onCellMouseenterBound)
+    })
+  }
+
+  onActionClicked (e) {
     const target = e.target
     const targetId = target.id
-    const numberOfRectangles = rectanglesDrawn.length
+    const numberOfRectangles = this.rectanglesDrawn.length
 
     if (!numberOfRectangles) {
       playSound('error')
@@ -179,86 +275,55 @@ function setupGrid () {
     }
 
     if (targetId === 'apply') {
-      applyLayout()
+      this.applyLayout()
     } else if (targetId === 'undo') {
-      removePreviousSelection()
+      this.removePreviousSelection()
     } else if (targetId === 'save') {
-      saveLayout()
+      this.saveLayout()
     } else if (targetId === 'clear') {
-      clearAllSelections()
+      this.clearAllSelections()
     }
   }
 
-  async function onSelectChanged (e) {
-    const target = e.target
-    const targetId = target.id
-
-    const storedPreferences = await storage
-      .load('preferences', storage.preferenceDefaults)
-      .catch((error) => {
-        console.error('An error occurred:', error)
-        target.checked = !target.checked
-      })
-
-    const preference = storedPreferences[targetId]
-
-    if (!preference) {
-      return
-    }
-
-    preference.status = target.value
-
-    try {
-      await storage.save('preferences', storedPreferences)
-    } catch (error) {
-      console.error('An error occurred:', error)
-    }
-
-    if (target.id === 'grid_size') {
-      window.location.reload()
-    }
-  }
-
-  function clearAllSelections () {
-    const numberOfRectangles = rectanglesDrawn.length
+  clearAllSelections () {
+    const numberOfRectangles = this.rectanglesDrawn.length
 
     for (let i = 0; i < numberOfRectangles; i++) {
-      removePreviousSelection()
+      this.removePreviousSelection()
     }
   }
 
-  // This is required for resizing cells once dragging begins
-  function onCellMouseenter (e) {
-    if (!isDragging || e.buttons !== 1) return
-    removeAllSelections()
+  onCellMouseenter (e) {
+    if (!this.isDragging || e.buttons !== 1) return
+    this.removeAllSelections()
   }
 
-  function onTableMousedown (e) {
-    if (e.buttons !== 1 || rectanglesDrawn.length >= maxrextangles) return
+  onTableMousedown (e) {
+    if (e.buttons !== 1 || this.rectanglesDrawn.length >= this.maxrectangles) { return }
 
-    removeAllSelections()
+    this.removeAllSelections()
 
     if (e.target.classList.contains('cell')) {
-      startCell = e.target
-      endCell = e.target
-      isDragging = true
+      this.startCell = e.target
+      this.endCell = e.target
+      this.isDragging = true
     }
   }
 
-  function onTableMousemove (e) {
-    if (!isDragging) return
+  onTableMousemove (e) {
+    if (!this.isDragging) return
 
     // If the mouse is over a cell, set the endCell variable to that cell
-    if (e.target.classList.contains('cell')) endCell = e.target
+    if (e.target.classList.contains('cell')) this.endCell = e.target
 
     // Get the row and column indices of the start and end cells
-    const startRow = startCell.parentElement.rowIndex
-    const startCol = startCell.cellIndex
-    const endRow = endCell.parentElement.rowIndex
-    const endCol = endCell.cellIndex
+    const startRow = this.startCell.parentElement.rowIndex
+    const startCol = this.startCell.cellIndex
+    const endRow = this.endCell.parentElement.rowIndex
+    const endCol = this.endCell.cellIndex
 
     // Loop through all rows between the start and end rows
-    for (const row of Array.from(table.rows).slice(
+    for (const row of Array.from(this.table.rows).slice(
       Math.min(startRow, endRow),
       Math.max(startRow, endRow) + 1
     )) {
@@ -272,7 +337,7 @@ function setupGrid () {
     }
   }
 
-  function removeAllSelections () {
+  removeAllSelections () {
     const cells = document.querySelectorAll('.cell')
 
     for (const cell of cells) {
@@ -280,30 +345,33 @@ function setupGrid () {
     }
   }
 
-  function removePreviousSelection () {
-    const selection = rectanglesDrawn[rectanglesDrawn.length - 1]
-    clearGhost(selection, ghostCount)
-    ghostCount--
-    rectanglesDrawn.pop()
+  removePreviousSelection () {
+    const selection = this.rectanglesDrawn[this.rectanglesDrawn.length - 1]
+    this.clearGhost(selection, this.ghostCount)
+    this.ghostCount--
+    console.log(this.ghostCount, this.rectanglesDrawn)
+    this.rectanglesDrawn.pop()
   }
 
-  function transformSelectionToGhost () {
-    ghostCount++
+  transformSelectionToGhost () {
+    this.ghostCount++
 
     const cells = document.querySelectorAll('.highlight')
 
     for (const cell of cells) {
       cell.classList.remove('highlight')
-      cell.classList.add('ghost_' + ghostCount)
+      cell.classList.add('ghost_' + this.ghostCount)
     }
 
-    const finalSelection = document.querySelectorAll('.ghost_' + ghostCount)
-    const boundingBox = getBoundingBox(finalSelection)
+    const finalSelection = document.querySelectorAll(
+      '.ghost_' + this.ghostCount
+    )
+    const boundingBox = this.getBoundingBox(finalSelection)
 
-    createRectangle(boundingBox, ghostCount)
+    this.createRectangle(boundingBox, this.ghostCount)
   }
 
-  function createRectangle (boundingBox, number) {
+  createRectangle (boundingBox, number) {
     const rectangle = document.createElement('div')
     const rectangleInner = document.createElement('div')
     const stage = document.getElementById('stage')
@@ -319,8 +387,8 @@ function setupGrid () {
     stage.prepend(rectangle)
   }
 
-  async function applyLayout () {
-    const gridSize = table.rows[0].cells.length
+  async applyLayout () {
+    const gridSize = this.table.rows[0].cells.length
 
     const currentWindow = await windows.getCurrentWindow().catch((error) => {
       console.error('An error occurred:', error)
@@ -329,7 +397,7 @@ function setupGrid () {
     try {
       await message.send({
         msg: 'layout',
-        rectangles: rectanglesDrawn,
+        rectangles: this.rectanglesDrawn,
         gridSize,
         currentWindowId: currentWindow.id
       })
@@ -337,10 +405,10 @@ function setupGrid () {
       console.error('An error occurred:', error)
     }
 
-    clearAllSelections()
+    this.clearAllSelections()
   }
 
-  async function saveLayout () {
+  async saveLayout () {
     const maxLayoutsAllowed = 50
 
     const storedLayouts = await storage.load('layouts', []).catch((error) => {
@@ -360,12 +428,12 @@ function setupGrid () {
       return
     }
 
-    const gridSize = table.rows[0].cells.length
+    const gridSize = this.table.rows[0].cells.length
 
     const layoutObj = {
       name,
       id: uid.create(),
-      layout: rectanglesDrawn,
+      layout: this.rectanglesDrawn,
       gridSize
     }
 
@@ -377,24 +445,24 @@ function setupGrid () {
       console.error('An error occurred:', error)
     }
 
-    clearAllSelections()
+    this.clearAllSelections()
     renderLayoutItem(layoutObj)
   }
 
-  async function onDocumentMouseup () {
+  async onDocumentMouseup () {
     const highlight = document.querySelectorAll('.highlight')
 
-    if (!highlight.length || !startCell || !endCell) {
-      removeAllSelections()
-      isDragging = false
+    if (!highlight.length || !this.startCell || !this.endCell) {
+      this.removeAllSelections()
+      this.isDragging = false
       return
     }
 
     // Calculate the start and end row and column indices
-    const startRow = startCell.parentElement.rowIndex
-    const startCol = startCell.cellIndex
-    const endRow = endCell.parentElement.rowIndex
-    const endCol = endCell.cellIndex
+    const startRow = this.startCell.parentElement.rowIndex
+    const startCol = this.startCell.cellIndex
+    const endRow = this.endCell.parentElement.rowIndex
+    const endCol = this.endCell.cellIndex
 
     // Calculate the width and height of the selection
     const width = Math.abs(endCol - startCol) + 1
@@ -411,32 +479,28 @@ function setupGrid () {
       y
     }
 
-    isDragging = false
-
-    rectanglesDrawn.push(selectionObject)
-
-    transformSelectionToGhost()
-    startCell = null
-    endCell = null
+    this.isDragging = false
+    this.rectanglesDrawn.push(selectionObject)
+    this.transformSelectionToGhost()
+    this.startCell = null
+    this.endCell = null
   }
 
-  function onDocumentKeydown (e) {
+  onDocumentKeydown (e) {
     if (e.key === 'Escape') {
-      if (isDragging) {
+      if (this.isDragging) {
         e.preventDefault()
-        isDragging = false
-        startCell = null
-        endCell = null
-        removeAllSelections()
+        this.isDragging = false
+        this.startCell = null
+        this.endCell = null
+        this.removeAllSelections()
       }
     }
   }
 
-  function clearGhost (selection, number) {
-    const table = document.getElementById('grid')
-
+  clearGhost (selection, number) {
     // Loop over the cells within the selection
-    for (const row of Array.from(table.rows).slice(
+    for (const row of Array.from(this.table.rows).slice(
       selection.y,
       selection.y + selection.height
     )) {
@@ -453,7 +517,7 @@ function setupGrid () {
     rectangle.remove()
   }
 
-  function getBoundingBox (elements) {
+  getBoundingBox (elements) {
     if (elements.length === 0) {
       return null
     }
@@ -500,6 +564,7 @@ function registerListeners () {
   }
 
   onAll('input[type="checkbox"]', 'change', onCheckBoxChanged)
+  onAll('select', 'change', onSelectChanged)
   on('savedLayouts', 'click', onSavedLayoutClicked)
   on(document, 'keydown', onDocumentKeydown)
 }
@@ -643,5 +708,40 @@ async function onSavedLayoutClicked (e) {
 
     const parentElement = document.getElementById('savedLayouts')
     parentElement.innerHTML = parentElement.innerHTML.trim()
+  }
+}
+
+async function onSelectChanged (e) {
+  const target = e.target
+  const targetId = target.id
+
+  const storedPreferences = await storage
+    .load('preferences', storage.preferenceDefaults)
+    .catch((error) => {
+      console.error('An error occurred:', error)
+      target.checked = !target.checked
+    })
+
+  const preference = storedPreferences[targetId]
+
+  if (!preference) {
+    return
+  }
+
+  preference.status = target.value
+
+  try {
+    await storage.save('preferences', storedPreferences)
+  } catch (error) {
+    console.error('An error occurred:', error)
+  }
+
+  if (target.id === 'grid_size') {
+    gridInstance.detachEventListeners()
+    gridInstance.detachCellListeners()
+    gridInstance.clearAllSelections()
+    gridInstance.buildGrid(target.value)
+    gridInstance.attachEventListeners()
+    gridInstance.attachCellListeners()
   }
 }
