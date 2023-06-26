@@ -2,6 +2,7 @@
 
 /* global chrome, Audio */
 
+import * as display from './display.js'
 import * as navigation from './navigation.js'
 import * as windows from './windows.js'
 import * as message from './message.js'
@@ -32,8 +33,18 @@ async function init () {
 
   const gridSize = parseInt(storedPreferences.grid_size.status)
 
+  const currentWindow = await windows.getCurrentWindow().catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const connectedDisplays = await display.getDisplayInfo().catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  const currentDisplay = display.getDisplayContainingCurrentWindow(connectedDisplays, currentWindow)
+
   gridInstance = new Grid()
-  gridInstance.setup(gridSize)
+  gridInstance.setup(gridSize, currentDisplay)
 
   registerListeners()
   navigation.init()
@@ -42,6 +53,12 @@ async function init () {
 
 function ready () {
   postponeAnimationUntilReady()
+
+  const hiddenElements = document.querySelectorAll('.hidden')
+
+  for (const el of hiddenElements) {
+    el.classList.remove('hidden')
+  }
 }
 
 function postponeAnimationUntilReady () {
@@ -135,8 +152,9 @@ class Grid {
     this.onCellMouseenterBound = this.onCellMouseenter.bind(this);
   }
   
-  setup (gridSize) {
+  setup (gridSize, display) {
     this.buildGrid(gridSize)
+    this.sizeGrid(display)
     this.attachEventListeners()
     this.attachCellListeners()
   }
@@ -155,6 +173,32 @@ class Grid {
       }
       table.appendChild(row)
     }
+  }
+
+  sizeGrid (display) {
+    const table = document.getElementById('grid')
+    const displayHeight = display.bounds.height
+    const displayWidth = display.bounds.width
+    
+    // Calculate the aspect ratio
+    const largerNumber = Math.max(displayHeight, displayWidth);
+    const smallerNumber = Math.min(displayHeight, displayWidth);
+    const aspectRatio = largerNumber / smallerNumber;
+
+    const gridFixedDimension = 350
+    const variableDimension = Math.round(this.getVariableDimension(gridFixedDimension, aspectRatio));
+
+    if (displayWidth >= displayHeight) {
+      table.style.width = `${gridFixedDimension}px`
+      table.style.height = `${variableDimension}px`
+    } else {
+      table.style.width = `${variableDimension}px`
+      table.style.height = `${gridFixedDimension}px`
+    }
+  }
+
+  getVariableDimension(fixedWidth, aspectRatio) {
+    return fixedWidth / aspectRatio;
   }
 
   attachEventListeners() {
@@ -701,45 +745,4 @@ async function onSelectChanged (e) {
     gridInstance.attachEventListeners()
     gridInstance.attachCellListeners()
   }
-}
-
-async function getDisplayContainingCurrentWindow (connectedDisplays, currentWindow) {
-  let index = 0
-  let maxCornersContained = 0
-
-  // Get the coordinates of all four corners of the current window
-  const wt = currentWindow.top
-  const wl = currentWindow.left
-  const wr = currentWindow.width + wl
-  const wb = currentWindow.height + wt
-  const corners = [
-    [wt, wl],
-    [wt, wr],
-    [wb, wl],
-    [wb, wr]
-  ]
-
-  // Iterate over the connectedDisplays array and find the display that contains the most corners of the current window
-  for (const [i, display] of connectedDisplays.entries()) {
-    const dt = display.bounds.top
-    const dl = display.bounds.left
-    const dr = display.bounds.width + dl
-    const db = display.bounds.height + dt
-
-    // Check how many corners of the current window are contained within the current display
-    let cornersContained = 0
-    for (const [y, x] of corners) {
-      if (y >= dt && y <= db && x >= dl && x <= dr) {
-        cornersContained++
-      }
-    }
-
-    // Update the selected display if the current display contains more corners than the previous selection
-    if (cornersContained > maxCornersContained) {
-      index = i
-      maxCornersContained = cornersContained
-    }
-  }
-
-  return connectedDisplays[index]
 }
