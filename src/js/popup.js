@@ -117,16 +117,24 @@ async function restorePreferences () {
 }
 
 class Grid {
-  constructor () {
-    this.table = document.getElementById('grid')
-    this.maxrectangles = 10
-    this.rectanglesDrawn = []
-    this.ghostCount = 0
-    this.startCell = null
-    this.endCell = null
-    this.isDragging = false
+  constructor() {
+    this.table = document.getElementById('grid');
+    this.maxrectangles = 10;
+    this.rectanglesDrawn = [];
+    this.ghostCount = 0;
+    this.startCell = null;
+    this.endCell = null;
+    this.isDragging = false;
+  
+    // Bound event handler references
+    this.onTableMousedownBound = this.onTableMousedown.bind(this);
+    this.onTableMousemoveBound = this.onTableMousemove.bind(this);
+    this.onDocumentMouseupBound = this.onDocumentMouseup.bind(this);
+    this.onDocumentKeydownBound = this.onDocumentKeydown.bind(this);
+    this.onActionClickedBound = this.onActionClicked.bind(this);
+    this.onCellMouseenterBound = this.onCellMouseenter.bind(this);
   }
-
+  
   async setup (gridSize) {
     this.buildGrid(gridSize)
     this.attachEventListeners()
@@ -149,65 +157,67 @@ class Grid {
     }
   }
 
-  attachEventListeners () {
+  attachEventListeners() {
     const on = (target, event, handler) => {
       if (typeof target === 'string') {
-        document.getElementById(target).addEventListener(event, handler, false)
+        document.getElementById(target).addEventListener(event, handler, false);
       } else {
-        target.addEventListener(event, handler, false)
+        target.addEventListener(event, handler, false);
       }
-    }
-
+    };
+  
     const onAll = (target, event, handler) => {
-      const elements = document.querySelectorAll(target)
-
+      const elements = document.querySelectorAll(target);
+  
       for (const el of elements) {
-        el.addEventListener(event, handler, false)
+        el.addEventListener(event, handler, false);
       }
     }
-
-    on('grid', 'mousedown', this.onTableMousedown.bind(this))
-    on('grid', 'mousemove', this.onTableMousemove.bind(this))
-    on(document, 'mouseup', this.onDocumentMouseup.bind(this))
-    on(document, 'keydown', this.onDocumentKeydown.bind(this))
-    onAll('div.nav-index', 'click', this.onActionClicked.bind(this))
+  
+    on('grid', 'mousedown', this.onTableMousedownBound);
+    on('grid', 'mousemove', this.onTableMousemoveBound);
+    on(document, 'mouseup', this.onDocumentMouseupBound);
+    on(document, 'keydown', this.onDocumentKeydownBound);
+    onAll('div.nav-index', 'click', this.onActionClickedBound);
   }
-
-  detachEventListeners () {
+  
+  detachEventListeners() {
     const off = (target, event, handler) => {
       if (typeof target === 'string') {
-        document
-          .getElementById(target)
-          .removeEventListener(event, handler, false)
+        const element = document.getElementById(target);
+        if (element) {
+          element.removeEventListener(event, handler, false);
+        }
       } else {
-        target.removeEventListener(event, handler, false)
+        target.removeEventListener(event, handler, false);
       }
-    }
-
+    };
+  
     const offAll = (target, event, handler) => {
-      const elements = document.querySelectorAll(target)
-
-      for (const el of elements) {
-        el.removeEventListener(event, handler, false)
-      }
-    }
-
-    off('grid', 'mousedown', this.onTableMousedown.bind(this))
-    off('grid', 'mousemove', this.onTableMousemove.bind(this))
-    off(document, 'mouseup', this.onDocumentMouseup.bind(this))
-    off(document, 'keydown', this.onDocumentKeydown.bind(this))
-    offAll('div.nav-index', 'click', this.onActionClicked.bind(this))
-  }
+      const elements = document.querySelectorAll(target);
+  
+      elements.forEach((el) => {
+        el.removeEventListener(event, handler, false);
+      });
+    };
+  
+    off('grid', 'mousedown', this.onTableMousedownBound);
+    off('grid', 'mousemove', this.onTableMousemoveBound);
+    off(document, 'mouseup', this.onDocumentMouseupBound);
+    off(document, 'keydown', this.onDocumentKeydownBound);
+    offAll('div.nav-index', 'click', this.onActionClickedBound);
+  }  
+  
 
   attachCellListeners () {
     this.table.querySelectorAll('.cell').forEach((cell) => {
-      cell.addEventListener('mouseenter', this.onCellMouseenter.bind(this))
+      cell.addEventListener('mouseenter', this.onCellMouseenterBound)
     })
   }
 
   detachCellListeners () {
     this.table.querySelectorAll('.cell').forEach((cell) => {
-      cell.removeEventListener('mouseenter', this.onCellMouseenter.bind(this))
+      cell.removeEventListener('mouseenter', this.onCellMouseenterBound)
     })
   }
 
@@ -296,6 +306,7 @@ class Grid {
     const selection = this.rectanglesDrawn[this.rectanglesDrawn.length - 1]
     this.clearGhost(selection, this.ghostCount)
     this.ghostCount--
+    console.log(this.ghostCount, this.rectanglesDrawn)
     this.rectanglesDrawn.pop()
   }
 
