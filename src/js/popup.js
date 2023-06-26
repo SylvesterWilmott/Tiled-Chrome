@@ -349,7 +349,6 @@ class Grid {
     const selection = this.rectanglesDrawn[this.rectanglesDrawn.length - 1]
     this.clearGhost(selection, this.ghostCount)
     this.ghostCount--
-    console.log(this.ghostCount, this.rectanglesDrawn)
     this.rectanglesDrawn.pop()
   }
 
