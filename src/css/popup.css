@@ -395,6 +395,11 @@ input:checked + .track {
   mask-image: url(../images/clear.svg);
 }
 
+.item-icon.tabs {
+  -webkit-mask-image: url(../images/tabs.svg);
+  mask-image: url(../images/tabs.svg);
+}
+
 #savedLayouts .delete {
   display: none;
   pointer-events: all;

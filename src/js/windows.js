@@ -34,11 +34,11 @@ export function createWindow (obj) {
         left: obj.left,
         state: 'normal'
       },
-      function () {
+      function (window) {
         if (chrome.runtime.lastError) {
           reject(chrome.runtime.lastError.message)
         }
-        resolve()
+        resolve(window)
       }
     )
   })

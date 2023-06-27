@@ -3,8 +3,9 @@
 /* global chrome */
 
 export const preferenceDefaults = {
-  grid_size: { status: '6', type: 'select', options: ['6', '8', '9'] },
-  win_padding: { status: true, type: 'checkbox' }
+  grid_size:   { status: '6',   type: 'select', options: ['6', '8', '9'] },
+  win_padding: { status: true,  type: 'checkbox' },
+  split_tabs:  { status: false, type: 'checkbox' }
 }
 
 export function save (key, value) {

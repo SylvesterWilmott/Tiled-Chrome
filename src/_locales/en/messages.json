@@ -26,6 +26,9 @@
   "PREF_PADDING": {
     "message": "Window padding"
   },
+  "PREF_SPLIT_TABS": {
+    "message": "Move tabs to new windows"
+  },
   "BUTTON_UNDO": {
     "message": "Undo"
   },

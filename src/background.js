@@ -5,6 +5,7 @@
 import * as windows from './js/windows.js'
 import * as display from './js/display.js'
 import * as storage from './js/storage.js'
+import * as tabs from './js/tabs.js'
 
 chrome.runtime.onMessage.addListener(onMessageReceived)
 
@@ -73,6 +74,16 @@ async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
   const numberOfExistingWindows = existingWindows.length
   let n = 0
 
+  let allTabs = []
+
+  if (numberOfWindowsToBeSized > 1 && storedPreferences.split_tabs.status === true && currentWindow.type === 'normal') {
+    allTabs = await tabs.getAll().catch((error) => {
+      console.error('An error occurred:', error)
+    })
+  }
+
+  console.log(allTabs)
+
   for (const [i, rectangle] of arr.entries()) {
     const gridWidth = rectangle.width
     const gridHeight = rectangle.height
@@ -91,16 +102,30 @@ async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
       left: winX
     }
 
+    let workingWindow
+
     if (existingWindows[i]) {
+      workingWindow = existingWindows[i]
+
       try {
-        await windows.setWindowSize(existingWindows[i].id, winObj)
+        await windows.setWindowSize(workingWindow.id, winObj)
         n++
       } catch (error) {
         console.error('An error occurred:', error)
       }
     } else {
       try {
-        await windows.createWindow(winObj)
+        const newWindow = await windows.createWindow(winObj)
+        workingWindow = newWindow
+      } catch (error) {
+        console.error('An error occurred:', error)
+      }
+    }
+
+    if (allTabs.length > 0 && typeof allTabs[i] !== 'undefined' && workingWindow.type === 'normal') {
+      try {
+        await tabs.move(allTabs[i].id, workingWindow.id)
+        await tabs.focus(allTabs[i].id)
       } catch (error) {
         console.error('An error occurred:', error)
       }
