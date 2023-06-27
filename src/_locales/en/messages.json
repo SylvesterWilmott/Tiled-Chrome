@@ -1,12 +1,12 @@
 {
   "EXT_NAME": {
-    "message": "Tiled - Layout manager"
+    "message": "Tiled - Tiling window manager"
   },
   "EXT_NAME_SHORT": {
     "message": "Tiled"
   },
   "EXT_DESCRIPTION": {
-    "message": "Bring order and harmony to your workspace and enjoy a clutter-free environment"
+    "message": "Forget about generic presets—design and save your own window layouts"
   },
   "PREFERENCES": {
     "message": "Preferences"
