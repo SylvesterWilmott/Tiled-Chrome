@@ -82,8 +82,6 @@ async function handleNewWindowDimensions (arr, gridSize, currentWindowId) {
     })
   }
 
-  console.log(allTabs)
-
   for (const [i, rectangle] of arr.entries()) {
     const gridWidth = rectangle.width
     const gridHeight = rectangle.height
