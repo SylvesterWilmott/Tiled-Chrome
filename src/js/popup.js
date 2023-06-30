@@ -679,12 +679,11 @@ async function onSavedLayoutClicked (e) {
     }
   } else if (target.classList.contains('delete')) {
     const itemElement = target.closest('.item')
+    const itemId = itemElement.dataset.id
 
-    if (!itemElement) {
+    if (!itemElement || !itemId) {
       return
     }
-
-    const itemId = itemElement.dataset.id
 
     const storedLayouts = await storage.load('layouts', []).catch((error) => {
       console.error('An error occurred:', error)
