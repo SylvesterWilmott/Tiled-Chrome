@@ -93,7 +93,7 @@ function navigateListUp () {
 }
 
 function clickSelectedItem () {
-  const selectedItem = document.querySelectorAll('.nav-index')[navIndex]
+  const selectedItem = document.querySelector('.selected')
   if (selectedItem) selectedItem.click()
 }
 
