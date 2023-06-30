@@ -305,7 +305,6 @@ class Grid {
       this.clearAllSelections()
     }
   }
-    
 
   clearAllSelections () {
     const numberOfRectangles = this.rectanglesDrawn.length
