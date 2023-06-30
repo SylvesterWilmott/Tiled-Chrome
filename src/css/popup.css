@@ -492,6 +492,10 @@ input:checked + .track {
 
 .action .item-icon {
   pointer-events: none;
+  background: var(--neutral-secondary);
+}
+
+.action:hover .item-icon {
   background: var(--neutral-primary);
 }
 
