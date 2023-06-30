@@ -36,7 +36,7 @@
     "message": "Apply"
   },
   "BUTTON_SAVE": {
-    "message": "Save layout"
+    "message": "Save layout..."
   },
   "TITLE_PROMPT": {
     "message": "Enter a name for your layout"
@@ -45,10 +45,10 @@
     "message": "Maximum number of layouts reached"
   },
   "ACCELERATOR_APPLY": {
-    "message": "\u23CE"
+    "message": "\u2318\u23CE"
   },
   "ACCELERATOR_APPLY_MAC": {
-    "message": "\u23CE"
+    "message": "\u2318\u23CE"
   },
   "ACCELERATOR_UNDO": {
     "message": "Ctrl+Z"
@@ -67,11 +67,5 @@
   },
   "ACCELERATOR_CLEAR_MAC": {
     "message": "\u2318\u232B"
-  },
-  "ACCELERATOR_NEW": {
-    "message": "Ctrl+N"
-  },
-  "ACCELERATOR_NEW_MAC": {
-    "message": "\u2318N"
   }
 }

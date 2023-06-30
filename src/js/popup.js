@@ -1,5 +1,8 @@
 'use strict'
 
+// Todo
+// Disable undo and clear buttons when not usable
+
 /* global chrome, Audio */
 
 import * as display from './display.js'
@@ -150,6 +153,7 @@ class Grid {
     this.onDocumentKeydownBound = this.onDocumentKeydown.bind(this)
     this.onActionClickedBound = this.onActionClicked.bind(this)
     this.onCellMouseenterBound = this.onCellMouseenter.bind(this)
+    this.onGridActionClickedBound = this.onGridActionClicked.bind(this)
   }
 
   setup (gridSize, display) {
@@ -222,6 +226,7 @@ class Grid {
     on('grid', 'mousemove', this.onTableMousemoveBound)
     on(document, 'mouseup', this.onDocumentMouseupBound)
     on(document, 'keydown', this.onDocumentKeydownBound)
+    on('gridActions', 'click', this.onGridActionClickedBound)
     onAll('div.nav-index', 'click', this.onActionClickedBound)
   }
 
@@ -249,6 +254,7 @@ class Grid {
     off('grid', 'mousemove', this.onTableMousemoveBound)
     off(document, 'mouseup', this.onDocumentMouseupBound)
     off(document, 'keydown', this.onDocumentKeydownBound)
+    off('gridActions', 'click', this.onGridActionClickedBound)
     offAll('div.nav-index', 'click', this.onActionClickedBound)
   }
 
@@ -269,17 +275,32 @@ class Grid {
     const targetId = target.id
     const numberOfRectangles = this.rectanglesDrawn.length
 
+    if (targetId === 'apply' || targetId === 'save') {
+      if (!numberOfRectangles) {
+        playSound('error')
+        return
+      }
+
+      if (targetId === 'apply') {
+        this.applyLayout()
+      } else if (targetId === 'save') {
+        this.saveLayout()
+      }
+    }
+  }
+
+  onGridActionClicked (e) {
+    const target = e.target
+    const targetId = target.id
+    const numberOfRectangles = this.rectanglesDrawn.length
+
     if (!numberOfRectangles) {
       playSound('error')
       return
     }
 
-    if (targetId === 'apply') {
-      this.applyLayout()
-    } else if (targetId === 'undo') {
+    if (targetId === 'undo') {
       this.removePreviousSelection()
-    } else if (targetId === 'save') {
-      this.saveLayout()
     } else if (targetId === 'clear') {
       this.clearAllSelections()
     }
@@ -350,6 +371,10 @@ class Grid {
     this.clearGhost(selection, this.ghostCount)
     this.ghostCount--
     this.rectanglesDrawn.pop()
+
+    if (!this.rectanglesDrawn.length) {
+      document.getElementById('gridActions').classList.add('disabled')
+    }
   }
 
   transformSelectionToGhost () {
@@ -483,6 +508,10 @@ class Grid {
     this.transformSelectionToGhost()
     this.startCell = null
     this.endCell = null
+
+    if (this.rectanglesDrawn.length) {
+      document.getElementById('gridActions').classList.remove('disabled')
+    }
   }
 
   onDocumentKeydown (e) {
@@ -596,7 +625,7 @@ async function onCheckBoxChanged (e) {
 }
 
 function onDocumentKeydown (e) {
-  if (e.key === 'Enter') {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
     const navElements = document.querySelectorAll('.nav-index:not(.selected)')
 
     if (navElements.length === 0) {

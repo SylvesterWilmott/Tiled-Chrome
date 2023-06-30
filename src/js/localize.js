@@ -12,6 +12,7 @@ export async function localize () {
   }
 
   const accelerators = document.querySelectorAll('[data-accelerator]')
+  const shortcuts = document.querySelectorAll('[data-shortcut]')
 
   const platformInfo = await getPlatformInfo().catch((error) => {
     console.error('An error occurred:', error)
@@ -23,6 +24,16 @@ export async function localize () {
         a.innerText = chrome.i18n.getMessage(`ACCELERATOR_${a.dataset.accelerator}_MAC`)
       } else {
         a.innerText = chrome.i18n.getMessage(`ACCELERATOR_${a.dataset.accelerator}`)
+      }
+    }
+  }
+
+  if (shortcuts) {
+    for (const s of shortcuts) {
+      if (platformInfo.os === 'mac') {
+        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}_MAC`)
+      } else {
+        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}`)
       }
     }
   }

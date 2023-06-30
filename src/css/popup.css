@@ -18,7 +18,7 @@
 body {
   background-color: var(--background-elevated);
   width: 800px;
-  height: 520px;
+  height: 525px;
   position: relative;
   overflow: hidden;
   overscroll-behavior: none;
@@ -60,6 +60,14 @@ body {
   height: 100vh;
   display: flex;
   align-items: center;
+  background-image: url(../images/dotted_bg_light.svg);
+  background-repeat: repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  .grid-container {
+    background-image: url(../images/dotted_bg_dark.svg);
+  }
 }
 
 .grid-stage {
@@ -70,6 +78,7 @@ body {
   margin: auto;
   display: inline-block;
   transition: 0.4s;
+  background: var(--background);
 }
 
 .grid {
@@ -221,15 +230,12 @@ select {
   padding: 0 28px 0 8px;
   height: 32px;
   border-radius: 4px;
-  background: var(--neutral-tertiary);
+  background: var(--background-elevated);
+  border: 1px solid var(--separator);
 }
 
 select:focus {
   box-shadow: 0px 0px 0px 2px var(--track-active);
-}
-
-select:hover {
-  background: var(--neutral-tertiary);
 }
 
 .select {
@@ -370,11 +376,6 @@ input:checked + .track {
   mask-image: url(../images/save.svg);
 }
 
-.item-icon.undo {
-  -webkit-mask-image: url(../images/undo.svg);
-  mask-image: url(../images/undo.svg);
-}
-
 .item-icon.padding {
   -webkit-mask-image: url(../images/padding.svg);
   mask-image: url(../images/padding.svg);
@@ -388,11 +389,6 @@ input:checked + .track {
 .item-icon.layout {
   -webkit-mask-image: url(../images/layout.svg);
   mask-image: url(../images/layout.svg);
-}
-
-.item-icon.clear {
-  -webkit-mask-image: url(../images/clear.svg);
-  mask-image: url(../images/clear.svg);
 }
 
 #savedLayouts .delete {
@@ -465,4 +461,64 @@ input:checked + .track {
 .edge select:hover,
 .edge select:focus {
   box-shadow: inset 0px 0px 0px 1px var(--control-outline-focus);
+}
+
+.actions {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--background-elevated);
+  border: 1px solid var(--separator);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.action {
+  height: 32px;
+  width: 32px;
+  background: transparent;
+  outline: none;
+  border: none;
+  padding: 6px;
+}
+
+.action:hover {
+  background: var(--neutral-quaternary);
+}
+
+.action .item-icon {
+  pointer-events: none;
+  background: var(--neutral-secondary);
+}
+
+.action:hover .item-icon {
+  background: var(--neutral-primary);
+}
+
+.item-icon.clear {
+  -webkit-mask-image: url(../images/clear.svg);
+  mask-image: url(../images/clear.svg);
+}
+
+.item-icon.undo {
+  -webkit-mask-image: url(../images/undo.svg);
+  mask-image: url(../images/undo.svg);
+}
+
+.actions.disabled {
+  pointer-events: none;
+}
+
+.actions.disabled .item-icon {
+  opacity: 0.3;
+}
+
+.gridSize {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
 }
