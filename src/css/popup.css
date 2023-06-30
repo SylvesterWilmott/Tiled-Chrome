@@ -357,10 +357,6 @@ input:checked + .track {
   background-color: var(--neutral-secondary);
 }
 
-.left-detail .item-icon.active {
-  background-color: var(--primary);
-}
-
 .item-icon.gridSize {
   -webkit-mask-image: url(../images/grid.svg);
   mask-image: url(../images/grid.svg);
@@ -453,14 +449,13 @@ input:checked + .track {
 
 .edge select {
   font-size: 13px;
-  background: transparent;
   border-radius: 2px;
-  box-shadow: inset 0px 0px 0px 1px var(--control-outline);
+  border: 1px solid var(--control-outline);
 }
 
 .edge select:hover,
 .edge select:focus {
-  box-shadow: inset 0px 0px 0px 1px var(--control-outline-focus);
+  border: 1px solid var(--control-outline-focus);
 }
 
 .actions {
@@ -475,6 +470,11 @@ input:checked + .track {
   border: 1px solid var(--separator);
   border-radius: 4px;
   overflow: hidden;
+}
+
+.edge .actions {
+  border: 1px solid var(--control-outline);
+  border-radius: 2px;
 }
 
 .action {
