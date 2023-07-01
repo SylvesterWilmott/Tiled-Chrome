@@ -11,9 +11,8 @@
   --separator: rgba(0, 0, 0, 0.1);
   --background: #ffffff;
   --background-elevated: #ffffff;
-  --handle: #ffffff;
-  --track: rgba(0, 0, 0, 0.23);
-  --track-active: rgba(5, 80, 225, 0.5);
+  --focus: rgba(5, 80, 225, 0.5);
+  --on-primary: #ffffff;
   --cell: rgba(0, 0, 0, 0.2);
   --cell-highlighted: rgba(0, 0, 0, 0.07);
   --rect-fill: rgba(5, 80, 255, 0.05);
@@ -32,9 +31,8 @@
     --separator: rgba(255, 255, 255, 0.1);
     --background: #202124;
     --background-elevated: #292a2d;
-    --handle: #dadce0;
-    --track: rgba(255, 255, 255, 0.56);
-    --track-active: rgba(181, 196, 255, 0.5);
+    --focus: rgba(181, 196, 255, 0.5);
+    --on-primary: #202124;
     --cell: #505053;
     --cell-highlighted: rgba(255, 255, 255, 0.07);
     --rect-fill: rgba(181, 196, 255, 0.05);

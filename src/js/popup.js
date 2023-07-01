@@ -227,7 +227,7 @@ class Grid {
     on(document, 'mouseup', this.onDocumentMouseupBound)
     on(document, 'keydown', this.onDocumentKeydownBound)
     on('gridActions', 'click', this.onGridActionClickedBound)
-    onAll('div.nav-index', 'click', this.onActionClickedBound)
+    onAll('button', 'click', this.onActionClickedBound)
   }
 
   detachEventListeners () {
@@ -255,7 +255,7 @@ class Grid {
     off(document, 'mouseup', this.onDocumentMouseupBound)
     off(document, 'keydown', this.onDocumentKeydownBound)
     off('gridActions', 'click', this.onGridActionClickedBound)
-    offAll('div.nav-index', 'click', this.onActionClickedBound)
+    offAll('button', 'click', this.onActionClickedBound)
   }
 
   attachCellListeners () {
@@ -294,15 +294,17 @@ class Grid {
     const targetId = target.id
     const numberOfRectangles = this.rectanglesDrawn.length
 
-    if (!numberOfRectangles) {
-      playSound('error')
-      return
-    }
+    if (targetId === 'undo' || targetId === 'clear') {
+      if (!numberOfRectangles) {
+        playSound('error')
+        return
+      }
 
-    if (targetId === 'undo') {
-      this.removePreviousSelection()
-    } else if (targetId === 'clear') {
-      this.clearAllSelections()
+      if (targetId === 'undo') {
+        this.removePreviousSelection()
+      } else if (targetId === 'clear') {
+        this.clearAllSelections()
+      }
     }
   }
 
@@ -667,7 +669,7 @@ async function renderLayoutItem (layout) {
   const labelElement = fragment.querySelector('.label')
   labelElement.innerText = layout.name
 
-  savedLayoutsElement.prepend(fragment)
+  savedLayoutsElement.appendChild(fragment)
 }
 
 async function onSavedLayoutClicked (e) {

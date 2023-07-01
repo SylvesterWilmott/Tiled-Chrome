@@ -10,53 +10,27 @@
     <div class="columns">
       <div class="grid-container">
         <div id="gridActions" class="actions disabled">
-          <button id="undo" class="action" data-shortcut="UNDO"><div class="item-icon undo"></div></button>
-          <button id="clear" class="action" data-shortcut="CLEAR"><div class="item-icon clear"></div></button>
+          <div>
+            <input type="checkbox" id="win_padding"/>
+            <label for="win_padding" class="action"><div class="item-icon padding"></div></label>
+          </div>
+          <button id="undo" class="action conditional" data-shortcut="UNDO"><div class="item-icon undo"></div></button>
+          <button id="clear" class="action conditional" data-shortcut="CLEAR"><div class="item-icon clear"></div></button>
         </div>
-        <div class="gridSize">
+        <div class="grid-size">
           <div class="select">
             <select name="grid_size" id="grid_size"></select>
           </div>
+        </div>
+        <div class="cta-actions">
+          <button id="save" class="button secondary" data-labelshortcut="SAVE"></button>
+          <button id="apply" class="button primary" data-labelshortcut="APPLY"></button>
         </div>
         <div class="grid-stage hidden" id="stage">
           <table id="grid" class="grid"></table>
         </div>
       </div>
       <div class="menu" id="menu">
-        <div class="group">
-          <div id="apply" class="item nav-index">
-            <div class="left-detail">
-              <div class="item-icon apply"></div>
-              <div class="label" data-localize="BUTTON_DONE"></div>
-            </div>
-            <div class="right-detail">
-              <div class="accelerator" data-accelerator="APPLY"></div>
-            </div>
-          </div>
-          <div id="save" class="item nav-index">
-            <div class="left-detail">
-              <div class="item-icon save"></div>
-              <div class="label" data-localize="BUTTON_SAVE"></div>
-            </div>
-            <div class="right-detail">
-              <div class="accelerator" data-accelerator="SAVE"></div>
-            </div>
-          </div>
-        </div>
-        <div class="group">
-          <label for="win_padding" class="item nav-index">
-            <div class="left-detail">
-              <div class="item-icon padding"></div>
-              <div class="label" data-localize="PREF_PADDING"></div>
-            </div>
-            <div class="right-detail">
-              <label class="switch">
-                <input type="checkbox" id="win_padding" />
-                <span class="track no-transition"></span>
-              </label>
-            </div>
-          </label>
-        </div>
         <div class="group" id="savedLayouts"></div>
       </div>
     </div>

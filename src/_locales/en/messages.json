@@ -32,11 +32,11 @@
   "BUTTON_CLEAR": {
     "message": "Clear"
   },
-  "BUTTON_DONE": {
+  "APPLY": {
     "message": "Apply"
   },
-  "BUTTON_SAVE": {
-    "message": "Save layout..."
+  "SAVE": {
+    "message": "Save"
   },
   "TITLE_PROMPT": {
     "message": "Enter a name for your layout"
