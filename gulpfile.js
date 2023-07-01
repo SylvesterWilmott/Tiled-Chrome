@@ -42,7 +42,9 @@ gulp.task('update-version', function (cb) {
 })
 
 gulp.task('build-chrome', function () {
-  const version = require('./package.json').version
+  const manifestPath = path.join(__dirname, 'src', 'manifest.json')
+  const manifest = require(manifestPath)
+  const version = manifest.version
 
   return gulp.src(['src/**'])
     .pipe(imagemin([imagemin.optipng({ optimizationLevel: 5 })]))
@@ -54,7 +56,9 @@ gulp.task('build-chrome', function () {
 })
 
 gulp.task('build-edge', function () {
-  const version = require('./package.json').version
+  const manifestPath = path.join(__dirname, 'src', 'manifest.json')
+  const manifest = require(manifestPath)
+  const version = manifest.version
 
   return gulp.src(['src/**'])
     .pipe(imagemin([imagemin.optipng({ optimizationLevel: 5 })]))
