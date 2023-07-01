@@ -626,11 +626,7 @@ async function onCheckBoxChanged (e) {
 
 function onDocumentKeydown (e) {
   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-    const navElements = document.querySelectorAll('.nav-index:not(.selected)')
-
-    if (navElements.length === 0) {
-      document.getElementById('apply').click()
-    }
+    document.getElementById('apply').click()
   } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
     document.getElementById('save').click()
