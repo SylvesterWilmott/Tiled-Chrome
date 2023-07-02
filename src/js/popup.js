@@ -105,7 +105,9 @@ async function renderSavedLayouts () {
 
   if (storedLayouts.length > 0) {
     for (const layout of storedLayouts) {
-      renderLayoutItem(layout)
+      await renderLayoutItem(layout).catch((error) => {
+        console.error('An error occurred:', error)
+      })
     }
   }
 }
@@ -484,7 +486,9 @@ class Grid {
     }
 
     this.clearAllSelections()
-    renderLayoutItem(layoutObj)
+    await renderLayoutItem(layoutObj).catch((error) => {
+      console.error('An error occurred:', error)
+    })
   }
 
   async onDocumentMouseup () {
