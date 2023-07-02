@@ -14,6 +14,7 @@ export async function localize () {
   const accelerators = document.querySelectorAll('[data-accelerator]')
   const shortcuts = document.querySelectorAll('[data-shortcut]')
   const labelShortcuts = document.querySelectorAll('[data-labelshortcut]')
+  const labels = document.querySelectorAll('[data-label]')
 
   const platformInfo = await getPlatformInfo().catch((error) => {
     console.error('An error occurred:', error)
@@ -31,11 +32,16 @@ export async function localize () {
 
   if (shortcuts) {
     for (const s of shortcuts) {
+      const label = chrome.i18n.getMessage(`${s.dataset.shortcut}`)
+      let shortcut
+
       if (platformInfo.os === 'mac') {
-        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}_MAC`)
+        shortcut = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}_MAC`)
       } else {
-        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}`)
+        shortcut = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}`)
       }
+
+      s.title = `${label} (${shortcut})`
     }
   }
 
@@ -51,6 +57,12 @@ export async function localize () {
       }
 
       ls.innerText = `${label} (${shortcut})`
+    }
+  }
+
+  if (labels) {
+    for (const l of labels) {
+      l.title = chrome.i18n.getMessage(`${l.dataset.label}`)
     }
   }
 }

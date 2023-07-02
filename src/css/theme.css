@@ -8,6 +8,7 @@
   --neutral-secondary: rgba(0, 0, 0, 0.61);
   --neutral-tertiary: rgba(0, 0, 0, 0.09);
   --neutral-quaternary: rgba(0, 0, 0, 0.05);
+  --disabled: rgba(0, 0, 0, 0.4);
   --separator: rgba(0, 0, 0, 0.1);
   --background: #ffffff;
   --background-elevated: #ffffff;
@@ -28,6 +29,7 @@
     --neutral-secondary: rgba(255, 255, 255, 0.57);
     --neutral-tertiary: rgba(255, 255, 255, 0.14);
     --neutral-quaternary: rgba(255, 255, 255, 0.05);
+    --disabled: rgba(255, 255, 255, 0.4);
     --separator: rgba(255, 255, 255, 0.1);
     --background: #202124;
     --background-elevated: #292a2d;

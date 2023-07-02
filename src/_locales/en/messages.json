@@ -26,10 +26,10 @@
   "PREF_PADDING": {
     "message": "Window padding"
   },
-  "BUTTON_UNDO": {
+  "UNDO": {
     "message": "Undo"
   },
-  "BUTTON_CLEAR": {
+  "CLEAR": {
     "message": "Clear"
   },
   "APPLY": {
