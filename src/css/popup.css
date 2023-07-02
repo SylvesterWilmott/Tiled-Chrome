@@ -17,7 +17,7 @@
 
 body {
   background-color: var(--background-elevated);
-  width: 780px;
+  width: 800px;
   height: 525px;
   position: relative;
   overflow: hidden;
@@ -48,7 +48,7 @@ body {
 
 .menu.open {
   overflow: auto;
-  flex: 0 0 280px;
+  flex: 0 0 275px;
 }
 
 .header {
@@ -419,7 +419,10 @@ select:focus {
 
 .actions.disabled .conditional {
   pointer-events: none;
-  opacity: 0.3;
+}
+
+.actions.disabled .conditional .item-icon {
+  background-color: var(--disabled);
 }
 
 .top-left {
@@ -462,7 +465,7 @@ select:focus {
 
 .main-actions.disabled > .button {
   background-color: var(--background);
-  color: var(--neutral-tertiary);
+  color: var(--disabled);
   box-shadow: inset 0px 0px 0px 1px var(--separator);
 }
 
@@ -471,11 +474,6 @@ select:focus {
 }
 
 .button:active {
-  opacity: 0.85;
-}
-
-.button:disabled {
-  color: var(--neutral-secondary);
   opacity: 0.85;
 }
 
