@@ -9,7 +9,15 @@
   <body>
     <div class="columns">
       <div class="grid-container">
-        <div id="gridActions" class="actions disabled">
+        <div class="grid-size top-left">
+          <div class="select">
+            <select name="grid_size" id="grid_size"></select>
+          </div>
+        </div>
+        <div class="actions top-right">
+          <button id="showMenu" class ="action"><div class="item-icon menu"></div></button>
+        </div>
+        <div id="gridActions" class="actions bottom-left disabled">
           <div>
             <input type="checkbox" id="win_padding"/>
             <label for="win_padding" class="action"><div class="item-icon padding"></div></label>
@@ -17,12 +25,7 @@
           <button id="undo" class="action conditional" data-shortcut="UNDO"><div class="item-icon undo"></div></button>
           <button id="clear" class="action conditional" data-shortcut="CLEAR"><div class="item-icon clear"></div></button>
         </div>
-        <div class="grid-size">
-          <div class="select">
-            <select name="grid_size" id="grid_size"></select>
-          </div>
-        </div>
-        <div class="cta-actions">
+        <div id="mainActions" class="main-actions bottom-right disabled">
           <button id="save" class="button secondary" data-labelshortcut="SAVE"></button><button id="apply" class="button primary" data-labelshortcut="APPLY"></button>
         </div>
         <div class="grid-stage hidden" id="stage">

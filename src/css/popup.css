@@ -17,7 +17,7 @@
 
 body {
   background-color: var(--background-elevated);
-  width: 800px;
+  width: 780px;
   height: 525px;
   position: relative;
   overflow: hidden;
@@ -37,12 +37,18 @@ body {
 
 .menu {
   overflow: auto;
-  flex: 0 0 300px;
+  flex: 0 0 0;
   border-left: 1px solid var(--separator);
   height: 100vh;
   padding: 4px 0;
   overscroll-behavior: none;
   position: relative;
+  transition: all 0.4s;
+}
+
+.menu.open {
+  overflow: auto;
+  flex: 0 0 280px;
 }
 
 .header {
@@ -203,6 +209,14 @@ body {
   min-width: 0;
 }
 
+.label {
+  font-size: 13px;
+  margin-right: 32px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 select {
   pointer-events: all;
   appearance: none;
@@ -317,6 +331,9 @@ select:focus {
   font-weight: 500;
   color: var(--neutral-secondary);
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #savedLayouts:empty::after {
@@ -327,6 +344,9 @@ select:focus {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .edge .left-detail .item-icon {
@@ -345,9 +365,6 @@ select:focus {
 }
 
 .actions {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -395,21 +412,38 @@ select:focus {
   mask-image: url(../images/undo.svg);
 }
 
+.item-icon.menu {
+  -webkit-mask-image: url(../images/menu.svg);
+  mask-image: url(../images/menu.svg);
+}
+
 .actions.disabled .conditional {
   pointer-events: none;
   opacity: 0.3;
 }
 
-.grid-size {
+.top-left {
   position: absolute;
   top: 16px;
   left: 16px;
 }
 
-.cta-actions {
+.bottom-right {
   position: absolute;
   bottom: 16px;
   right: 16px;
+}
+
+.top-right {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.bottom-left {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
 }
 
 .button {
@@ -424,6 +458,12 @@ select:focus {
   border-radius: 4px;
   transition: all 0.15s ease;
   user-select: none;
+}
+
+.main-actions.disabled > .button {
+  background-color: var(--background);
+  color: var(--neutral-tertiary);
+  box-shadow: inset 0px 0px 0px 1px var(--separator);
 }
 
 .button:hover {
@@ -469,9 +509,9 @@ label {
 }
 
 input[type="checkbox"]:checked + label {
-  background-color: var(--primary);
+  background-color: var(--neutral-tertiary);
 }
 
 input[type="checkbox"]:checked + label .item-icon {
-  background-color: var(--on-primary);
+  background-color: var(--neutral-primary);
 }

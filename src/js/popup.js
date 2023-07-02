@@ -376,6 +376,7 @@ class Grid {
 
     if (!this.rectanglesDrawn.length) {
       document.getElementById('gridActions').classList.add('disabled')
+      document.getElementById('mainActions').classList.add('disabled')
     }
   }
 
@@ -513,6 +514,7 @@ class Grid {
 
     if (this.rectanglesDrawn.length) {
       document.getElementById('gridActions').classList.remove('disabled')
+      document.getElementById('mainActions').classList.remove('disabled')
     }
   }
 
@@ -596,6 +598,7 @@ function registerListeners () {
   onAll('input[type="checkbox"]', 'change', onCheckBoxChanged)
   onAll('select', 'change', onSelectChanged)
   on('savedLayouts', 'click', onSavedLayoutClicked)
+  on('showMenu', 'click', onShowMenuButtonClicked)
   on(document, 'keydown', onDocumentKeydown)
 }
 
@@ -769,4 +772,9 @@ async function onSelectChanged (e) {
     gridInstance.attachEventListeners()
     gridInstance.attachCellListeners()
   }
+}
+
+function onShowMenuButtonClicked() {
+  const menu = document.getElementById('menu');
+  menu.classList.toggle('open');
 }
