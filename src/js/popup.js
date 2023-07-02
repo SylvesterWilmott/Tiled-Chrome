@@ -51,10 +51,21 @@ async function init () {
 
   registerListeners()
   navigation.init()
-  ready()
+
+  await ready().catch((error) => {
+    console.error('An error occurred:', error)
+  })
 }
 
-function ready () {
+async function ready () {
+  const isMenuOpen = await storage.load('menuOpen', false).catch((error) => {
+    console.error('An error occurred:', error)
+  })
+
+  if (isMenuOpen) {
+    menu.classList.add('open');
+  }
+  
   postponeAnimationUntilReady()
 
   const hiddenElements = document.querySelectorAll('.hidden')
@@ -774,7 +785,17 @@ async function onSelectChanged (e) {
   }
 }
 
-function onShowMenuButtonClicked() {
+async function onShowMenuButtonClicked() {
   const menu = document.getElementById('menu');
   menu.classList.toggle('open');
+
+  try {
+    if (menu.classList.contains('open')) {
+      await storage.save('menuOpen', true)
+    } else {
+      await storage.save('menuOpen', false)
+    }
+  } catch (error) {
+    console.error('An error occurred:', error)
+  }
 }
