@@ -1,8 +1,5 @@
 'use strict'
 
-// Todo
-// Disable undo and clear buttons when not usable
-
 /* global chrome, Audio */
 
 import * as display from './display.js'
