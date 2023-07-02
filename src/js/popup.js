@@ -486,6 +486,15 @@ class Grid {
     }
 
     this.clearAllSelections()
+
+    if (storedLayouts.length === 1) {
+      try {
+        await openMenu()
+      } catch (error) {
+        console.error('An error occurred:', error)
+      }
+    }
+    
     await renderLayoutItem(layoutObj).catch((error) => {
       console.error('An error occurred:', error)
     })
@@ -799,6 +808,17 @@ async function onShowMenuButtonClicked() {
     } else {
       await storage.save('menuOpen', false)
     }
+  } catch (error) {
+    console.error('An error occurred:', error)
+  }
+}
+
+async function openMenu() {
+  const menu = document.getElementById('menu');
+  menu.classList.add('open');
+
+  try {
+    await storage.save('menuOpen', true)
   } catch (error) {
     console.error('An error occurred:', error)
   }
