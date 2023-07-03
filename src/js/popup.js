@@ -140,7 +140,7 @@ class Grid {
     this.table = document.getElementById('grid')
     this.maxrectangles = 10
     this.rectanglesDrawn = []
-    this.ghostCount = 0
+    this.rectangleCount = 0
     this.startCell = null
     this.endCell = null
     this.isDragging = false
@@ -366,9 +366,8 @@ class Grid {
   }
 
   removePreviousSelection () {
-    const selection = this.rectanglesDrawn[this.rectanglesDrawn.length - 1]
-    this.clearGhost(selection, this.ghostCount)
-    this.ghostCount--
+    this.clearRectangle(this.rectangleCount)
+    this.rectangleCount--
     this.rectanglesDrawn.pop()
 
     if (!this.rectanglesDrawn.length) {
@@ -376,22 +375,17 @@ class Grid {
     }
   }
 
-  transformSelectionToGhost () {
-    this.ghostCount++
+  transformSelectionToRectangle () {
+    this.rectangleCount++
 
     const cells = document.querySelectorAll('.highlight')
+    const boundingBox = this.getBoundingBox(cells)
+
+    this.createRectangle(boundingBox, this.rectangleCount)
 
     for (const cell of cells) {
       cell.classList.remove('highlight')
-      cell.classList.add('ghost_' + this.ghostCount)
     }
-
-    const finalSelection = document.querySelectorAll(
-      '.ghost_' + this.ghostCount
-    )
-    const boundingBox = this.getBoundingBox(finalSelection)
-
-    this.createRectangle(boundingBox, this.ghostCount)
   }
 
   createRectangle (boundingBox, number) {
@@ -404,7 +398,8 @@ class Grid {
     rectangle.style.width = `${boundingBox.right - boundingBox.left}px`
     rectangle.style.height = `${boundingBox.bottom - boundingBox.top}px`
     rectangle.style.zIndex = number + 10
-    rectangle.classList.add('rect_' + number)
+    rectangle.classList.add('rectangle')
+    rectangle.dataset.number = number
 
     rectangle.prepend(rectangleInner)
     stage.prepend(rectangle)
@@ -506,7 +501,7 @@ class Grid {
 
     this.isDragging = false
     this.rectanglesDrawn.push(selectionObject)
-    this.transformSelectionToGhost()
+    this.transformSelectionToRectangle()
     this.startCell = null
     this.endCell = null
 
@@ -527,22 +522,8 @@ class Grid {
     }
   }
 
-  clearGhost (selection, number) {
-    // Loop over the cells within the selection
-    for (const row of Array.from(this.table.rows).slice(
-      selection.y,
-      selection.y + selection.height
-    )) {
-      for (const cell of Array.from(row.cells).slice(
-        selection.x,
-        selection.x + selection.width
-      )) {
-        cell.classList.remove('ghost_' + number) // Remove the "ghost" class from each cell
-      }
-    }
-
-    // Remove rect from DOM
-    const rectangle = document.querySelector('.rect_' + number)
+  clearRectangle (number) {
+    const rectangle = document.querySelector(`[data-number="${number}"]`);
     rectangle.remove()
   }
 
