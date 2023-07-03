@@ -523,7 +523,7 @@ class Grid {
   }
 
   clearRectangle (number) {
-    const rectangle = document.querySelector(`[data-number="${number}"]`);
+    const rectangle = document.querySelector(`[data-number="${number}"]`)
     rectangle.remove()
   }
 
