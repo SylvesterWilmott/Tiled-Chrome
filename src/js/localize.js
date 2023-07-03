@@ -30,11 +30,16 @@ export async function localize () {
 
   if (shortcuts) {
     for (const s of shortcuts) {
+      const label = chrome.i18n.getMessage(`BUTTON_${s.dataset.shortcut}`)
+      let shortcut
+
       if (platformInfo.os === 'mac') {
-        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}_MAC`)
+        shortcut = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}_MAC`)
       } else {
-        s.title = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}`)
+        shortcut = chrome.i18n.getMessage(`ACCELERATOR_${s.dataset.shortcut}`)
       }
+
+      s.title = `${label} (${shortcut})`
     }
   }
 }
