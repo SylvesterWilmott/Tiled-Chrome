@@ -643,6 +643,7 @@ async function onCheckBoxChanged (e) {
 
 function onDocumentKeydown (e) {
   if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
     document.getElementById('apply').click()
   } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
