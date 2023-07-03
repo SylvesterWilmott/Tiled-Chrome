@@ -140,7 +140,6 @@ class Grid {
     this.table = document.getElementById('grid')
     this.maxrectangles = 10
     this.rectanglesDrawn = []
-    this.rectangleCount = 0
     this.startCell = null
     this.endCell = null
     this.isDragging = false
@@ -366,8 +365,7 @@ class Grid {
   }
 
   removePreviousSelection () {
-    this.clearRectangle(this.rectangleCount)
-    this.rectangleCount--
+    this.clearRectangle(this.rectanglesDrawn.length)
     this.rectanglesDrawn.pop()
 
     if (!this.rectanglesDrawn.length) {
@@ -376,12 +374,10 @@ class Grid {
   }
 
   transformSelectionToRectangle () {
-    this.rectangleCount++
-
     const cells = document.querySelectorAll('.highlight')
     const boundingBox = this.getBoundingBox(cells)
 
-    this.createRectangle(boundingBox, this.rectangleCount)
+    this.createRectangle(boundingBox, this.rectanglesDrawn.length)
 
     for (const cell of cells) {
       cell.classList.remove('highlight')
