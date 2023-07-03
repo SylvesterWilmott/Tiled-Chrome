@@ -299,7 +299,7 @@ class Grid {
       this.restorePreviousSelection()
     } else if (targetId === 'clear' && this.rectanglesDrawn.length) {
       this.clearAllSelections()
-    } 
+    }
   }
 
   clearAllSelections () {
@@ -309,7 +309,7 @@ class Grid {
       const latestRectangleNumber = this.rectanglesDrawn.length
 
       this.clearRectangle(latestRectangleNumber)
-      this.rectanglesDrawn.pop();
+      this.rectanglesDrawn.pop()
     }
 
     this.clearUndoStack()
@@ -373,21 +373,21 @@ class Grid {
     const rectangleToBeCleared = document.querySelector(`[data-number="${latestRectangleNumber}"]`)
 
     this.clearRectangle(latestRectangleNumber)
-    const removedRectangle = this.rectanglesDrawn.pop();
+    const removedRectangle = this.rectanglesDrawn.pop()
 
     this.removedRectangles.push({
       rectangleData: removedRectangle,
       rectangleElement: rectangleToBeCleared
-    });
+    })
 
     this.updateUndoRedoButtons()
   }
 
-  restorePreviousSelection() {
-    const restoredRectangle = this.removedRectangles.pop();
+  restorePreviousSelection () {
+    const restoredRectangle = this.removedRectangles.pop()
     const rectangleElement = restoredRectangle.rectangleElement
 
-    this.rectanglesDrawn.push(restoredRectangle.rectangleData);
+    this.rectanglesDrawn.push(restoredRectangle.rectangleData)
 
     const stage = document.getElementById('stage')
     stage.prepend(rectangleElement)
@@ -409,11 +409,11 @@ class Grid {
     this.updateUndoRedoButtons()
   }
 
-  clearUndoStack() {
+  clearUndoStack () {
     this.removedRectangles = []
   }
 
-  updateUndoRedoButtons() {
+  updateUndoRedoButtons () {
     if (this.rectanglesDrawn.length) {
       document.getElementById('undo').classList.remove('disabled')
       document.getElementById('clear').classList.remove('disabled')
