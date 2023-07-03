@@ -417,7 +417,7 @@ input:checked + .track {
 
 .actions {
   position: absolute;
-  left: 16px;
+  right: 16px;
   bottom: 16px;
   height: 32px;
   display: flex;
@@ -480,6 +480,10 @@ input:checked + .track {
 
 .gridSize {
   position: absolute;
-  right: 16px;
+  left: 16px;
   bottom: 16px;
+}
+
+.action-group {
+  border-right: 1px solid var(--separator);
 }
