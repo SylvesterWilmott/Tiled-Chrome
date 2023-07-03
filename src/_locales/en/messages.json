@@ -29,6 +29,9 @@
   "BUTTON_UNDO": {
     "message": "Undo"
   },
+  "BUTTON_REDO": {
+    "message": "Redo"
+  },
   "BUTTON_CLEAR": {
     "message": "Clear"
   },
@@ -55,6 +58,12 @@
   },
   "ACCELERATOR_UNDO_MAC": {
     "message": "\u2318Z"
+  },
+  "ACCELERATOR_REDO": {
+    "message": "Ctrl+\u23CE+Z"
+  },
+  "ACCELERATOR_REDO_MAC": {
+    "message": "\u2318\u23CEZ"
   },
   "ACCELERATOR_SAVE": {
     "message": "Ctrl+S"

@@ -465,11 +465,16 @@ input:checked + .track {
   mask-image: url(../images/undo.svg);
 }
 
-.actions.disabled {
+.item-icon.redo {
+  -webkit-mask-image: url(../images/redo.svg);
+  mask-image: url(../images/redo.svg);
+}
+
+.actions .disabled {
   pointer-events: none;
 }
 
-.actions.disabled .item-icon {
+.actions .disabled .item-icon {
   opacity: 0.3;
 }
 

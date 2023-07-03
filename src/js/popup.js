@@ -140,6 +140,7 @@ class Grid {
     this.table = document.getElementById('grid')
     this.maxRectangles = 50
     this.rectanglesDrawn = []
+    this.removedRectangles = []
     this.startCell = null
     this.endCell = null
     this.isDragging = false
@@ -291,26 +292,28 @@ class Grid {
   onGridActionClicked (e) {
     const target = e.target
     const targetId = target.id
-    const numberOfRectangles = this.rectanglesDrawn.length
 
-    if (!numberOfRectangles) {
-      playSound('error')
-      return
-    }
-
-    if (targetId === 'undo') {
+    if (targetId === 'undo' && this.rectanglesDrawn.length) {
       this.removePreviousSelection()
-    } else if (targetId === 'clear') {
+    } else if (targetId === 'redo' && this.removedRectangles.length) {
+      this.restorePreviousSelection()
+    } else if (targetId === 'clear' && this.rectanglesDrawn.length) {
       this.clearAllSelections()
-    }
+    } 
   }
 
   clearAllSelections () {
     const numberOfRectangles = this.rectanglesDrawn.length
 
     for (let i = 0; i < numberOfRectangles; i++) {
-      this.removePreviousSelection()
+      const latestRectangleNumber = this.rectanglesDrawn.length
+
+      this.clearRectangle(latestRectangleNumber)
+      this.rectanglesDrawn.pop();
     }
+
+    this.clearUndoStack()
+    this.updateUndoRedoButtons()
   }
 
   onCellMouseenter (e) {
@@ -366,12 +369,30 @@ class Grid {
   }
 
   removePreviousSelection () {
-    this.clearRectangle(this.rectanglesDrawn.length)
-    this.rectanglesDrawn.pop()
+    const latestRectangleNumber = this.rectanglesDrawn.length
+    const rectangleToBeCleared = document.querySelector(`[data-number="${latestRectangleNumber}"]`)
 
-    if (!this.rectanglesDrawn.length) {
-      document.getElementById('gridActions').classList.add('disabled')
-    }
+    this.clearRectangle(latestRectangleNumber)
+    const removedRectangle = this.rectanglesDrawn.pop();
+
+    this.removedRectangles.push({
+      rectangleData: removedRectangle,
+      rectangleElement: rectangleToBeCleared
+    });
+
+    this.updateUndoRedoButtons()
+  }
+
+  restorePreviousSelection() {
+    const restoredRectangle = this.removedRectangles.pop();
+    const rectangleElement = restoredRectangle.rectangleElement
+
+    this.rectanglesDrawn.push(restoredRectangle.rectangleData);
+
+    const stage = document.getElementById('stage')
+    stage.prepend(rectangleElement)
+
+    this.updateUndoRedoButtons()
   }
 
   transformSelectionToRectangle () {
@@ -383,6 +404,29 @@ class Grid {
     for (const cell of cells) {
       cell.classList.remove('highlight')
     }
+
+    this.clearUndoStack()
+    this.updateUndoRedoButtons()
+  }
+
+  clearUndoStack() {
+    this.removedRectangles = []
+  }
+
+  updateUndoRedoButtons() {
+    if (this.rectanglesDrawn.length) {
+      document.getElementById('undo').classList.remove('disabled')
+      document.getElementById('clear').classList.remove('disabled')
+    } else {
+      document.getElementById('undo').classList.add('disabled')
+      document.getElementById('clear').classList.add('disabled')
+    }
+
+    if (this.removedRectangles.length) {
+      document.getElementById('redo').classList.remove('disabled')
+    } else {
+      document.getElementById('redo').classList.add('disabled')
+    }
   }
 
   createRectangle (boundingBox, number) {
@@ -390,10 +434,10 @@ class Grid {
     const rectangleInner = document.createElement('div')
     const stage = document.getElementById('stage')
 
-    rectangle.style.left = `${Math.round(boundingBox.left)}px`
-    rectangle.style.top = `${Math.round(boundingBox.top)}px`
-    rectangle.style.width = `${Math.round(boundingBox.right - boundingBox.left)}px`
-    rectangle.style.height = `${Math.round(boundingBox.bottom - boundingBox.top)}px`
+    rectangle.style.left = `${boundingBox.left}px`
+    rectangle.style.top = `${boundingBox.top}px`
+    rectangle.style.width = `${boundingBox.right - boundingBox.left}px`
+    rectangle.style.height = `${boundingBox.bottom - boundingBox.top}px`
     rectangle.style.zIndex = number + 10
     rectangle.classList.add('rectangle')
     rectangle.dataset.number = number
@@ -499,10 +543,6 @@ class Grid {
     this.transformSelectionToRectangle()
     this.startCell = null
     this.endCell = null
-
-    if (this.rectanglesDrawn.length) {
-      document.getElementById('gridActions').classList.remove('disabled')
-    }
   }
 
   onDocumentKeydown (e) {
@@ -607,6 +647,9 @@ function onDocumentKeydown (e) {
   } else if (e.key === 's' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
     document.getElementById('save').click()
+  } else if (e.key === 'z' && e.shiftKey && (e.metaKey || e.ctrlKey)) {
+    e.preventDefault()
+    document.getElementById('redo').click()
   } else if (e.key === 'z' && (e.metaKey || e.ctrlKey)) {
     e.preventDefault()
     document.getElementById('undo').click()
