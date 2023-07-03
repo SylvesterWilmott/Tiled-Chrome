@@ -138,11 +138,12 @@ async function restorePreferences () {
 class Grid {
   constructor () {
     this.table = document.getElementById('grid')
-    this.maxrectangles = 50
+    this.maxRectangles = 50
     this.rectanglesDrawn = []
     this.startCell = null
     this.endCell = null
     this.isDragging = false
+    this.maxLayoutsAllowed = 50
 
     // Bound event handler references
     this.onTableMousedownBound = this.onTableMousedown.bind(this)
@@ -318,7 +319,7 @@ class Grid {
   }
 
   onTableMousedown (e) {
-    if (e.buttons !== 1 || this.rectanglesDrawn.length >= this.maxrectangles) { return }
+    if (e.buttons !== 1 || this.rectanglesDrawn.length >= this.maxRectangles) { return }
 
     this.removeAllSelections()
 
@@ -423,13 +424,11 @@ class Grid {
   }
 
   async saveLayout () {
-    const maxLayoutsAllowed = 50
-
     const storedLayouts = await storage.load('layouts', []).catch((error) => {
       console.error('An error occurred:', error)
     })
 
-    if (storedLayouts.length >= maxLayoutsAllowed) {
+    if (storedLayouts.length >= this.maxLayoutsAllowed) {
       playSound('error')
       window.alert(chrome.i18n.getMessage('MAXIMUM_SAVED_ALERT'))
       return
