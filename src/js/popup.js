@@ -138,7 +138,7 @@ async function restorePreferences () {
 class Grid {
   constructor () {
     this.table = document.getElementById('grid')
-    this.maxrectangles = 10
+    this.maxrectangles = 50
     this.rectanglesDrawn = []
     this.startCell = null
     this.endCell = null
