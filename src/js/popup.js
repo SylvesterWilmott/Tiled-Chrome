@@ -389,10 +389,10 @@ class Grid {
     const rectangleInner = document.createElement('div')
     const stage = document.getElementById('stage')
 
-    rectangle.style.left = `${boundingBox.left}px`
-    rectangle.style.top = `${boundingBox.top}px`
-    rectangle.style.width = `${boundingBox.right - boundingBox.left}px`
-    rectangle.style.height = `${boundingBox.bottom - boundingBox.top}px`
+    rectangle.style.left = `${Math.round(boundingBox.left)}px`
+    rectangle.style.top = `${Math.round(boundingBox.top)}px`
+    rectangle.style.width = `${Math.round(boundingBox.right - boundingBox.left)}px`
+    rectangle.style.height = `${Math.round(boundingBox.bottom - boundingBox.top)}px`
     rectangle.style.zIndex = number + 10
     rectangle.classList.add('rectangle')
     rectangle.dataset.number = number
