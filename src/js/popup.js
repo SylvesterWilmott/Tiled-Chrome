@@ -138,12 +138,12 @@ async function restorePreferences () {
 class Grid {
   constructor () {
     this.table = document.getElementById('grid')
-    this.maxrectangles = 10
+    this.maxRectangles = 50
     this.rectanglesDrawn = []
-    this.ghostCount = 0
     this.startCell = null
     this.endCell = null
     this.isDragging = false
+    this.maxLayoutsAllowed = 50
 
     // Bound event handler references
     this.onTableMousedownBound = this.onTableMousedown.bind(this)
@@ -319,7 +319,7 @@ class Grid {
   }
 
   onTableMousedown (e) {
-    if (e.buttons !== 1 || this.rectanglesDrawn.length >= this.maxrectangles) { return }
+    if (e.buttons !== 1 || this.rectanglesDrawn.length >= this.maxRectangles) { return }
 
     this.removeAllSelections()
 
@@ -366,9 +366,7 @@ class Grid {
   }
 
   removePreviousSelection () {
-    const selection = this.rectanglesDrawn[this.rectanglesDrawn.length - 1]
-    this.clearGhost(selection, this.ghostCount)
-    this.ghostCount--
+    this.clearRectangle(this.rectanglesDrawn.length)
     this.rectanglesDrawn.pop()
 
     if (!this.rectanglesDrawn.length) {
@@ -376,22 +374,15 @@ class Grid {
     }
   }
 
-  transformSelectionToGhost () {
-    this.ghostCount++
-
+  transformSelectionToRectangle () {
     const cells = document.querySelectorAll('.highlight')
+    const boundingBox = this.getBoundingBox(cells)
+
+    this.createRectangle(boundingBox, this.rectanglesDrawn.length)
 
     for (const cell of cells) {
       cell.classList.remove('highlight')
-      cell.classList.add('ghost_' + this.ghostCount)
     }
-
-    const finalSelection = document.querySelectorAll(
-      '.ghost_' + this.ghostCount
-    )
-    const boundingBox = this.getBoundingBox(finalSelection)
-
-    this.createRectangle(boundingBox, this.ghostCount)
   }
 
   createRectangle (boundingBox, number) {
@@ -399,12 +390,13 @@ class Grid {
     const rectangleInner = document.createElement('div')
     const stage = document.getElementById('stage')
 
-    rectangle.style.left = `${boundingBox.left}px`
-    rectangle.style.top = `${boundingBox.top}px`
-    rectangle.style.width = `${boundingBox.right - boundingBox.left}px`
-    rectangle.style.height = `${boundingBox.bottom - boundingBox.top}px`
+    rectangle.style.left = `${Math.round(boundingBox.left)}px`
+    rectangle.style.top = `${Math.round(boundingBox.top)}px`
+    rectangle.style.width = `${Math.round(boundingBox.right - boundingBox.left)}px`
+    rectangle.style.height = `${Math.round(boundingBox.bottom - boundingBox.top)}px`
     rectangle.style.zIndex = number + 10
-    rectangle.classList.add('rect_' + number)
+    rectangle.classList.add('rectangle')
+    rectangle.dataset.number = number
 
     rectangle.prepend(rectangleInner)
     stage.prepend(rectangle)
@@ -432,13 +424,11 @@ class Grid {
   }
 
   async saveLayout () {
-    const maxLayoutsAllowed = 50
-
     const storedLayouts = await storage.load('layouts', []).catch((error) => {
       console.error('An error occurred:', error)
     })
 
-    if (storedLayouts.length >= maxLayoutsAllowed) {
+    if (storedLayouts.length >= this.maxLayoutsAllowed) {
       playSound('error')
       window.alert(chrome.i18n.getMessage('MAXIMUM_SAVED_ALERT'))
       return
@@ -506,7 +496,7 @@ class Grid {
 
     this.isDragging = false
     this.rectanglesDrawn.push(selectionObject)
-    this.transformSelectionToGhost()
+    this.transformSelectionToRectangle()
     this.startCell = null
     this.endCell = null
 
@@ -527,22 +517,8 @@ class Grid {
     }
   }
 
-  clearGhost (selection, number) {
-    // Loop over the cells within the selection
-    for (const row of Array.from(this.table.rows).slice(
-      selection.y,
-      selection.y + selection.height
-    )) {
-      for (const cell of Array.from(row.cells).slice(
-        selection.x,
-        selection.x + selection.width
-      )) {
-        cell.classList.remove('ghost_' + number) // Remove the "ghost" class from each cell
-      }
-    }
-
-    // Remove rect from DOM
-    const rectangle = document.querySelector('.rect_' + number)
+  clearRectangle (number) {
+    const rectangle = document.querySelector(`[data-number="${number}"]`)
     rectangle.remove()
   }
 

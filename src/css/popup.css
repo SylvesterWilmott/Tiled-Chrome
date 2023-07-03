@@ -98,31 +98,13 @@ body {
   background-color: var(--cell-highlighted);
 }
 
-.rect_1,
-.rect_2,
-.rect_3,
-.rect_4,
-.rect_5,
-.rect_6,
-.rect_7,
-.rect_8,
-.rect_9,
-.rect_10 {
+.rectangle{
   padding: 4px;
   position: absolute;
   pointer-events: none;
 }
 
-.rect_1 > div,
-.rect_2 > div,
-.rect_3 > div,
-.rect_4 > div,
-.rect_5 > div,
-.rect_6 > div,
-.rect_7 > div,
-.rect_8 > div,
-.rect_9 > div,
-.rect_10 > div {
+.rectangle > div {
   border: 1px solid var(--primary);
   background-color: var(--rect-fill);
   border-radius: 6px;
@@ -131,16 +113,7 @@ body {
   height: 100%;
 }
 
-.rect_1 > div:before,
-.rect_2 > div:before,
-.rect_3 > div:before,
-.rect_4 > div:before,
-.rect_5 > div:before,
-.rect_6 > div:before,
-.rect_7 > div:before,
-.rect_8 > div:before,
-.rect_9 > div:before,
-.rect_10 > div:before {
+.rectangle > div:before {
   content: "";
   height: 14px;
   width: 100%;
@@ -152,16 +125,7 @@ body {
   border-radius: 6px 6px 0 0;
 }
 
-.rect_1 > div:after,
-.rect_2 > div:after,
-.rect_3 > div:after,
-.rect_4 > div:after,
-.rect_5 > div:after,
-.rect_6 > div:after,
-.rect_7 > div:after,
-.rect_8 > div:after,
-.rect_9 > div:after,
-.rect_10 > div:after {
+.rectangle > div:after {
   content: "";
   height: 4px;
   width: 4px;
@@ -448,14 +412,7 @@ input:checked + .track {
 }
 
 .edge select {
-  font-size: 13px;
   border-radius: 2px;
-  border: 1px solid var(--control-outline);
-}
-
-.edge select:hover,
-.edge select:focus {
-  border: 1px solid var(--control-outline-focus);
 }
 
 .actions {
@@ -473,7 +430,6 @@ input:checked + .track {
 }
 
 .edge .actions {
-  border: 1px solid var(--control-outline);
   border-radius: 2px;
 }
 
