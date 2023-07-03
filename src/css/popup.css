@@ -417,7 +417,7 @@ input:checked + .track {
 
 .actions {
   position: absolute;
-  left: 16px;
+  right: 16px;
   bottom: 16px;
   height: 32px;
   display: flex;
@@ -465,16 +465,29 @@ input:checked + .track {
   mask-image: url(../images/undo.svg);
 }
 
-.actions.disabled {
+.item-icon.redo {
+  -webkit-mask-image: url(../images/redo.svg);
+  mask-image: url(../images/redo.svg);
+}
+
+.actions .disabled {
   pointer-events: none;
 }
 
-.actions.disabled .item-icon {
+.actions .disabled .item-icon {
   opacity: 0.3;
 }
 
 .gridSize {
   position: absolute;
-  right: 16px;
+  left: 16px;
   bottom: 16px;
+}
+
+.action-group {
+  border-right: 1px solid var(--separator);
+}
+
+.action-group:last-child {
+  border-right: none;
 }
