@@ -487,3 +487,7 @@ input:checked + .track {
 .action-group {
   border-right: 1px solid var(--separator);
 }
+
+.action-group:last-child {
+  border-right: none;
+}
