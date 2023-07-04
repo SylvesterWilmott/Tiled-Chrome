@@ -366,7 +366,9 @@ input:checked + .track {
 
 #savedLayouts:not(:empty)::before {
   content: 'Saved layouts';
-  padding: 16px 16px 8px;
+  padding: 0 16px;
+  height: 40px;
+  line-height: 40px;
   font-size: 12px;
   font-weight: 500;
   color: var(--neutral-secondary);
