@@ -193,13 +193,7 @@ select {
   color: var(--neutral-primary);
   padding: 0 28px 0 8px;
   height: 32px;
-  border-radius: 4px;
-  background: var(--background-elevated);
-  border: 1px solid var(--separator);
-}
-
-select:focus {
-  box-shadow: 0px 0px 0px 2px var(--track-active);
+  background-color: transparent;
 }
 
 .select {
@@ -279,7 +273,6 @@ input:checked + .track {
 
 .label {
   font-size: 13px;
-  margin-right: 32px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -354,6 +347,7 @@ input:checked + .track {
 #savedLayouts .delete {
   display: none;
   pointer-events: all;
+  margin-left: 8px;
 }
 
 #savedLayouts .delete:hover {
@@ -366,7 +360,9 @@ input:checked + .track {
 
 #savedLayouts:not(:empty)::before {
   content: 'Saved layouts';
-  padding: 16px 16px 8px;
+  padding: 0 16px;
+  height: 40px;
+  line-height: 40px;
   font-size: 12px;
   font-weight: 500;
   color: var(--neutral-secondary);
@@ -416,9 +412,6 @@ input:checked + .track {
 }
 
 .actions {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
   height: 32px;
   display: flex;
   align-items: center;
@@ -427,6 +420,18 @@ input:checked + .track {
   border: 1px solid var(--separator);
   border-radius: 4px;
   overflow: hidden;
+}
+
+.bottom-left {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+}
+
+.bottom-right {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
 }
 
 .edge .actions {
@@ -476,12 +481,6 @@ input:checked + .track {
 
 .actions .disabled .item-icon {
   opacity: 0.3;
-}
-
-.gridSize {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
 }
 
 .action-group {
