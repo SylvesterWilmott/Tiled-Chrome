@@ -279,7 +279,6 @@ input:checked + .track {
 
 .label {
   font-size: 13px;
-  margin-right: 32px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -354,6 +353,7 @@ input:checked + .track {
 #savedLayouts .delete {
   display: none;
   pointer-events: all;
+  margin-left: 8px;
 }
 
 #savedLayouts .delete:hover {
