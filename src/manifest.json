@@ -1,7 +1,7 @@
 {
   "name": "__MSG_EXT_NAME__",
   "description": "__MSG_EXT_DESCRIPTION__",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "manifest_version": 3,
   "default_locale": "en",
   "permissions": ["system.display", "storage"],
