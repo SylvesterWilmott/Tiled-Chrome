@@ -24,7 +24,7 @@
     "message": "9x9"
   },
   "PREF_PADDING": {
-    "message": "Window padding"
+    "message": "Window spacing"
   },
   "BUTTON_UNDO": {
     "message": "Undo"
@@ -48,7 +48,7 @@
     "message": "Maximum number of layouts reached"
   },
   "ACCELERATOR_APPLY": {
-    "message": "\u2318\u23CE"
+    "message": "Ctrl+\u23CE"
   },
   "ACCELERATOR_APPLY_MAC": {
     "message": "\u2318\u23CE"
