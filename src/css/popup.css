@@ -16,7 +16,7 @@
 }
 
 body {
-  background-color: var(--background-elevated);
+  background-color: var(--surface-container);
   width: 800px;
   height: 525px;
   position: relative;
@@ -38,7 +38,7 @@ body {
 .menu {
   overflow: auto;
   flex: 0 0 300px;
-  border-left: 1px solid var(--separator);
+  border-left: 1px solid var(--outline-variant);
   height: 100vh;
   padding: 4px 0;
   overscroll-behavior: none;
@@ -53,7 +53,7 @@ body {
 
 .grid-container {
   overflow: hidden;
-  background: var(--background);
+  background: var(--surface);
   position: relative;
   width: 100%;
   text-align: center;
@@ -71,14 +71,14 @@ body {
 }
 
 .grid-stage {
-  box-shadow: inset 0px 0px 0px 1px var(--neutral-primary),
+  box-shadow: inset 0px 0px 0px 1px var(--on-surface),
     0px 2px 6px 0px rgba(0, 0, 0, 0.15);
   padding: 12px;
   position: relative;
   margin: auto;
   display: inline-block;
   transition: 0.4s;
-  background: var(--background);
+  background: var(--surface);
 }
 
 .grid {
@@ -89,13 +89,13 @@ body {
 }
 
 .cell {
-  border: 1px solid var(--cell);
+  border: 1px solid var(--outline-variant);
   position: relative;
   cursor: crosshair;
 }
 
 .cell.highlight {
-  background-color: var(--cell-highlighted);
+  background-color: var(--surface-container);
 }
 
 .rectangle{
@@ -139,7 +139,7 @@ body {
 .group {
   padding: 4px 0;
   list-style: none;
-  border-bottom: 1px solid var(--separator);
+  border-bottom: 1px solid var(--outline-variant);
 }
 
 .group:empty {
@@ -173,7 +173,7 @@ body {
 }
 
 .right-detail {
-  color: var(--neutral-secondary);
+  color: var(--on-surface-variant);
   width: auto;
   flex-shrink: 0;
 }
@@ -190,7 +190,7 @@ select {
   border: none;
   outline: none;
   font-size: 13px;
-  color: var(--neutral-primary);
+  color: var(--on-surface);
   padding: 0 28px 0 8px;
   height: 32px;
   background-color: transparent;
@@ -205,7 +205,7 @@ select {
 
 .select:after {
   content: "";
-  background-color: var(--neutral-secondary);
+  background-color: var(--on-surface-variant);
   height: 20px;
   width: 20px;
   -webkit-mask-image: url(../images/dropdown.svg);
@@ -236,7 +236,7 @@ select {
   bottom: 0;
   transition: 0.4s;
   border-radius: 16px;
-  background-color: var(--track);
+  background-color: var(--outline-variant);
 }
 
 .track:before {
@@ -247,7 +247,7 @@ select {
   width: 16px;
   left: -3px;
   bottom: -2px;
-  background-color: var(--handle);
+  background-color: var(--surface);
   border-radius: 12px;
   box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.15),
     0px 2px 3px 0px rgba(0, 0, 0, 0.2);
@@ -263,12 +263,12 @@ input:checked + .track:before {
 }
 
 input:checked + .track {
-  background-color: var(--track-active);
+  background-color: var(--primary70);
 }
 
 .label,
 .label-large {
-  color: var(--neutral-primary);
+  color: var(--on-surface);
 }
 
 .label {
@@ -288,30 +288,30 @@ input:checked + .track {
 }
 
 .accelerator {
-  color: var(--neutral-secondary);
+  color: var(--on-surface-variant);
 }
 
 .selected .accelerator {
-  color: var(--neutral-primary);
+  color: var(--on-surface);
 }
 
 .selected {
-  background: var(--neutral-tertiary);
+  background: var(--surface-container-highest);
 }
 
 .item-icon {
   height: 20px;
   width: 20px;
   min-width: 20px;
-  background-color: var(--neutral-secondary);
+  background-color: var(--on-surface-variant);
 }
 
 .left-detail .item-icon {
-  background-color: var(--neutral-secondary);
+  background-color: var(--on-surface-variant);
 }
 
 .right-detail .item-icon {
-  background-color: var(--neutral-secondary);
+  background-color: var(--on-surface-variant);
 }
 
 .item-icon.gridSize {
@@ -351,7 +351,7 @@ input:checked + .track {
 }
 
 #savedLayouts .delete:hover {
-  background-color: var(--neutral-primary);
+  background-color: var(--on-surface);
 }
 
 #savedLayouts .item:hover .delete {
@@ -365,7 +365,7 @@ input:checked + .track {
   line-height: 40px;
   font-size: 12px;
   font-weight: 500;
-  color: var(--neutral-secondary);
+  color: var(--on-surface-variant);
   display: block;
 }
 
@@ -376,7 +376,7 @@ input:checked + .track {
 
 .edge .track {
   background-color: transparent;
-  box-shadow: inset 0px 0px 0px 1px var(--neutral-secondary);
+  box-shadow: inset 0px 0px 0px 1px var(--on-surface-variant);
 }
 
 .edge .track:before {
@@ -384,13 +384,13 @@ input:checked + .track {
   width: 10px;
   left: 5px;
   bottom: 5px;
-  background-color: var(--neutral-primary);
+  background-color: var(--on-surface);
   border-radius: 5px;
   box-shadow: none;
 }
 
 .edge input:checked + .track:before {
-  background-color: var(--background);
+  background-color: var(--surface);
   transform: translateX(20px);
   height: 10px;
   width: 10px;
@@ -404,7 +404,7 @@ input:checked + .track {
 }
 
 .edge .left-detail .item-icon {
-  background-color: var(--neutral-primary);
+  background-color: var(--on-surface);
 }
 
 .edge select {
@@ -416,8 +416,8 @@ input:checked + .track {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--background-elevated);
-  border: 1px solid var(--separator);
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -448,16 +448,16 @@ input:checked + .track {
 }
 
 .action:hover {
-  background: var(--neutral-quaternary);
+  background: var(--surface-container-highest);
 }
 
 .action .item-icon {
   pointer-events: none;
-  background: var(--neutral-secondary);
+  background: var(--on-surface-variant);
 }
 
 .action:hover .item-icon {
-  background: var(--neutral-primary);
+  background: var(--on-surface);
 }
 
 .item-icon.clear {
@@ -484,7 +484,7 @@ input:checked + .track {
 }
 
 .action-group {
-  border-right: 1px solid var(--separator);
+  border-right: 1px solid var(--outline-variant);
 }
 
 .action-group:last-child {
