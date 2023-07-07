@@ -460,11 +460,6 @@ input:checked + .track {
   background: var(--neutral-primary);
 }
 
-.item-icon.clear {
-  -webkit-mask-image: url(../images/clear.svg);
-  mask-image: url(../images/clear.svg);
-}
-
 .item-icon.undo {
   -webkit-mask-image: url(../images/undo.svg);
   mask-image: url(../images/undo.svg);
