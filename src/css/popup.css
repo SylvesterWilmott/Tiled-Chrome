@@ -111,6 +111,14 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+  background-image: url(../images/pattern_bg_light.svg);
+  background-repeat: repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rectangle > div {
+    background-image: url(../images/pattern_bg_dark.svg);
+  }
 }
 
 .rectangle > div:before {
@@ -458,11 +466,6 @@ input:checked + .track {
 
 .action:hover .item-icon {
   background: var(--neutral-primary);
-}
-
-.item-icon.clear {
-  -webkit-mask-image: url(../images/clear.svg);
-  mask-image: url(../images/clear.svg);
 }
 
 .item-icon.undo {
