@@ -98,7 +98,7 @@ body {
   background-color: var(--cell-highlighted);
 }
 
-.rectangle{
+.rectangle {
   padding: 4px;
   position: absolute;
   pointer-events: none;
@@ -359,7 +359,7 @@ input:checked + .track {
 }
 
 #savedLayouts:not(:empty)::before {
-  content: 'Saved layouts';
+  content: "Saved layouts";
   padding: 0 16px;
   height: 40px;
   line-height: 40px;
