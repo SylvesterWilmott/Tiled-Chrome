@@ -48,31 +48,31 @@
     "message": "Maximum number of layouts reached"
   },
   "ACCELERATOR_APPLY": {
-    "message": "Ctrl+\u23CE"
+    "message": "Ctrl + Enter"
   },
   "ACCELERATOR_APPLY_MAC": {
     "message": "\u2318\u23CE"
   },
   "ACCELERATOR_UNDO": {
-    "message": "Ctrl+Z"
+    "message": "Ctrl + Z"
   },
   "ACCELERATOR_UNDO_MAC": {
     "message": "\u2318Z"
   },
   "ACCELERATOR_REDO": {
-    "message": "Ctrl+\u23CE+Z"
+    "message": "Ctrl + Shift + Z"
   },
   "ACCELERATOR_REDO_MAC": {
-    "message": "\u2318\u23CEZ"
+    "message": "\u21e7\u2318Z"
   },
   "ACCELERATOR_SAVE": {
-    "message": "Ctrl+S"
+    "message": "Ctrl + S"
   },
   "ACCELERATOR_SAVE_MAC": {
     "message": "\u2318S"
   },
   "ACCELERATOR_CLEAR": {
-    "message": "Ctrl+\u232B"
+    "message": "Ctrl + Backspace"
   },
   "ACCELERATOR_CLEAR_MAC": {
     "message": "\u2318\u232B"
