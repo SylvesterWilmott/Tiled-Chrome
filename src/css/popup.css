@@ -111,6 +111,14 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
+  background-image: url(../images/pattern_bg_light.svg);
+  background-repeat: repeat;
+}
+
+@media (prefers-color-scheme: dark) {
+  .rectangle > div {
+    background-image: url(../images/pattern_bg_dark.svg);
+  }
 }
 
 .rectangle > div:before {
